@@ -1,11 +1,11 @@
 services:
-  postgresql:
+  db:
     image: postgres:latest
     container_name: inventory_db
     environment:
+      - 'POSTGRES_USER=${SPRING_DATASOURCE_USER}'
       - 'POSTGRES_PASSWORD=${ROOT_PASSWORD}'
       - 'POSTGRES_DB=${DB_NAME}'
-      - 'POSTGRES_USER=${SPRING_DATASOURCE_USER}'
     ports:
       - '${PORT_BIND}'
     volumes:
