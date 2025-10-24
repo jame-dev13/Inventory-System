@@ -38,11 +38,5 @@ public class UserEntity {
            joinColumns = @JoinColumn(name = "id_user"),
            inverseJoinColumns = @JoinColumn(name = "id_role", unique = true))
    private Set<RoleEntity> roles;
-
-   @OneToMany
-   @JoinTable(name = "user_permissions",
-           joinColumns = @JoinColumn(name = "id_user"),
-           inverseJoinColumns = @JoinColumn(name = "id_permission", unique = true))
-   private Set<PermissionEntity> permissions;
 }
 
