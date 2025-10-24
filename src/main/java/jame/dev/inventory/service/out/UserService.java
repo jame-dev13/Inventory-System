@@ -6,6 +6,7 @@ import jame.dev.inventory.service.in.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,11 +33,13 @@ public class UserService implements IUserService {
    }
 
    @Override
+   @Transactional
    public UserEntity save(UserEntity user) {
       return repo.save(user);
    }
 
    @Override
+   @Transactional
    public void deleteUserById(Long id) {
       repo.deleteById(id);
    }

@@ -5,6 +5,7 @@ import jame.dev.inventory.dtos.auth.in.LoginRequest;
 import jame.dev.inventory.dtos.auth.in.RegisterRequest;
 import jame.dev.inventory.dtos.auth.out.RegisterResponse;
 import jame.dev.inventory.dtos.auth.out.TokenResponse;
+import jame.dev.inventory.exceptions.UserAlreadyExistsException;
 import jame.dev.inventory.jwt.in.JwtService;
 import jame.dev.inventory.models.RoleEntity;
 import jame.dev.inventory.models.UserEntity;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -36,10 +38,10 @@ public class AuthServiceImpl implements AuthService {
    private final AuthenticationManager auth;
 
    @Override
-   public RegisterResponse register(RegisterRequest request) throws IllegalAccessException {
+   public RegisterResponse register(RegisterRequest request) throws UserAlreadyExistsException {
       UserEntity existingUser = userService.getUserByEmail(request.email()).orElse(null);
-      if(existingUser != null){
-         throw new IllegalAccessException("User already exists.");
+      if (existingUser != null) {
+         throw new UserAlreadyExistsException("User already exists.");
       }
       UserEntity userEntity = userService.save(
               UserEntity.builder()
@@ -49,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
                       .password(request.password())
                       .token(TokenGeneratorUtil.generate())
                       .verified(false)
-                      .roles(Set.of(new RoleEntity(null, request.role())))
+                      .roles(Set.of(new RoleEntity(null, ERole.valueOf(request.role().name().split("_")[1]))))
                       .build()
       );
       return RegisterResponse.builder()
@@ -59,26 +61,29 @@ public class AuthServiceImpl implements AuthService {
    }
 
    @Override
-   public TokenResponse login(LoginRequest request) {
+   public TokenResponse login(LoginRequest request) throws AuthenticationException {
       try {
-         Authentication authentication = new UsernamePasswordAuthenticationToken(request.email(), request.password());
+         Authentication authentication = new UsernamePasswordAuthenticationToken(
+                 request.email(), request.password());
          Authentication authenticated = auth.authenticate(authentication);
+
          User user = (User) authenticated.getPrincipal();
+         Set<ERole> roles = user.getAuthorities().stream()
+                 .map(r -> r.getAuthority().substring(5))
+                 .map(ERole::valueOf)
+                 .collect(Collectors.toSet());
          String access = jwtService.getAccessToken(user.getUsername());
          String refresh = jwtService.getRefreshToken(user.getUsername());
+
          return TokenResponse.builder()
                  .access(access)
                  .refresh(refresh)
                  .subject(user.getUsername())
-                 .role(user.getAuthorities()
-                         .stream()
-                         .map(a -> ERole.valueOf(a.getAuthority()))
-                         .collect(Collectors.toSet()))
+                 .role(roles)
                  .build();
-      } catch (AuthenticationException e) {
-         return null;
-      } finally {
-         log.info("Authentication attempt by: {}", request.email());
+      } catch (BadCredentialsException e) {
+         throw new BadCredentialsException("Invalid Credentials.");
       }
    }
+
 }
