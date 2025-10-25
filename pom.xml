@@ -97,6 +97,7 @@
       <groupId>redis.clients</groupId>
       <artifactId>jedis</artifactId>
       <version>6.1.0</version>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 

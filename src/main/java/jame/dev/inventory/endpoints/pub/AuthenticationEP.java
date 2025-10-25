@@ -1,6 +1,7 @@
 package jame.dev.inventory.endpoints.pub;
 
 import jame.dev.inventory.auth.in.AuthService;
+import jame.dev.inventory.auth.in.LogoutService;
 import jame.dev.inventory.dtos.auth.in.LoginRequest;
 import jame.dev.inventory.dtos.auth.in.RegisterRequest;
 import jame.dev.inventory.dtos.auth.out.RegisterResponse;
@@ -20,6 +21,7 @@ public class AuthenticationEP {
 
    @Autowired
    private final AuthService authService;
+   private final LogoutService logoutService;
 
    @PostMapping("/signUp")
    public ResponseEntity<RegisterResponse> signUp(@RequestBody RegisterRequest request)

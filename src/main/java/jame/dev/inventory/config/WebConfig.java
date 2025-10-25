@@ -1,6 +1,8 @@
 package jame.dev.inventory.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jame.dev.inventory.auth.filters.JwtAuthorizationFilter;
+import jame.dev.inventory.auth.in.LogoutService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +35,7 @@ public class WebConfig {
 
    @Autowired
    private final JwtAuthorizationFilter filter;
+   private final LogoutService logoutService;
 
    @Bean
    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -46,6 +50,17 @@ public class WebConfig {
               .sessionManagement(s ->
                       s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
               .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+              .logout(logout -> {
+                 logout.logoutUrl("/v1/auth/logout")
+                         .addLogoutHandler((request, response, authentication) -> {
+                            String authHeader = request.getHeader("Authorization");
+                            logoutService.logout(authHeader);
+                         })
+                         .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                            SecurityContextHolder.clearContext();
+                         });
+              })
               .build();
    }
 

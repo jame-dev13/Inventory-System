@@ -4,9 +4,10 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jame.dev.inventory.exceptions.TokenReusedException;
 import jame.dev.inventory.jwt.in.JwtService;
+import jame.dev.inventory.service.in.TokenService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,9 +21,9 @@ import java.io.IOException;
 @AllArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-   @Autowired
    private final JwtService jwtService;
    private final UserDetailsService userDetailsService;
+   private final TokenService blacklist;
 
    @Override
    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -31,7 +32,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
          filterChain.doFilter(request, response);
          return;
       }
+
       String jwt = tokenHeader.substring(7);
+      System.out.println(blacklist.contains(jwt));
+      if(blacklist.contains(jwt)){
+         throw new TokenReusedException("Token revoked.");
+      }
       String username = jwtService.extractUsername(jwt);
       boolean isValid = jwtService.isTokenValid(jwt, username);
 

@@ -1,6 +1,8 @@
 package jame.dev.inventory.exceptionHandler;
 
 import jame.dev.inventory.exceptions.RefreshTokenException;
+import jame.dev.inventory.exceptions.TokenAlreadyBlacklisted;
+import jame.dev.inventory.exceptions.TokenReusedException;
 import jame.dev.inventory.exceptions.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,6 +73,18 @@ public class GlobalExceptionHandler {
               .body(Map.of("error", "Resource not found."));
    }
 
+   @ExceptionHandler(TokenReusedException.class)
+   public ResponseEntity<Map<String, String>> handleTokenReusedException(TokenReusedException ex){
+      return ResponseEntity
+              .status(HttpStatus.UNAUTHORIZED)
+              .body(Map.of("error", "Token Exception: " + ex.getMessage()));
+   }
+   @ExceptionHandler(TokenAlreadyBlacklisted.class)
+   public ResponseEntity<Map<String, String>> handleTokenAlreadyBlackListed(TokenAlreadyBlacklisted ex){
+      return ResponseEntity
+              .status(HttpStatus.UNAUTHORIZED)
+              .body(Map.of("error", ex.getMessage()));
+   }
 //   @ExceptionHandler(Exception.class)
 //   public ResponseEntity<Map<String, String>> handleInternalServerError(Exception ex){
 //      return ResponseEntity
