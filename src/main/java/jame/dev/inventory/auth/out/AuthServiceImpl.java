@@ -5,6 +5,7 @@ import jame.dev.inventory.dtos.auth.in.LoginRequest;
 import jame.dev.inventory.dtos.auth.in.RegisterRequest;
 import jame.dev.inventory.dtos.auth.out.RegisterResponse;
 import jame.dev.inventory.dtos.auth.out.TokenResponse;
+import jame.dev.inventory.exceptions.RefreshTokenException;
 import jame.dev.inventory.exceptions.UserAlreadyExistsException;
 import jame.dev.inventory.jwt.in.JwtService;
 import jame.dev.inventory.models.RoleEntity;
@@ -13,8 +14,6 @@ import jame.dev.inventory.models.enums.ERole;
 import jame.dev.inventory.service.in.IUserService;
 import jame.dev.inventory.utils.TokenGeneratorUtil;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,8 +21,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,7 +33,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-   private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
    @Autowired
    private final IUserService userService;
    private final JwtService jwtService;
@@ -72,18 +73,36 @@ public class AuthServiceImpl implements AuthService {
                  .map(r -> r.getAuthority().substring(5))
                  .map(ERole::valueOf)
                  .collect(Collectors.toSet());
-         String access = jwtService.getAccessToken(user.getUsername());
-         String refresh = jwtService.getRefreshToken(user.getUsername());
+         String access = jwtService.generateAccessToken(user.getUsername());
+         String refresh = jwtService.generateRefreshToken(user.getUsername());
 
          return TokenResponse.builder()
                  .access(access)
                  .refresh(refresh)
-                 .subject(user.getUsername())
-                 .role(roles)
                  .build();
       } catch (BadCredentialsException e) {
          throw new BadCredentialsException("Invalid Credentials.");
       }
+   }
+
+   @Override
+   public TokenResponse refresh(String refreshToken) throws RefreshTokenException {
+      if(refreshToken == null || !refreshToken.startsWith("Bearer ")){
+         throw new IllegalArgumentException("Invalid Token format.");
+      }
+      String jwtRefresh = refreshToken.substring(7);
+      String subject = Optional.ofNullable(jwtService.extractUsername(jwtRefresh))
+              .orElseThrow(() -> new NoSuchElementException("No subject present."));
+
+      UserEntity userEntity = userService.getUserByEmail(subject).orElseThrow(() ->
+              new UsernameNotFoundException("User not found."));
+
+      if(!jwtService.isTokenValid(jwtRefresh, userEntity.getEmail())){
+         throw new RefreshTokenException("Refresh token is invalid or expired.");
+      }
+      String newAccessToken = jwtService.generateAccessToken(userEntity.getEmail());
+      String newRefreshToken = jwtService.generateRefreshToken(userEntity.getEmail());
+      return new TokenResponse(newAccessToken, newRefreshToken);
    }
 
 }

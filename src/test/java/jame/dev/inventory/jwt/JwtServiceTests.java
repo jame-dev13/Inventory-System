@@ -20,8 +20,8 @@ public class JwtServiceTests {
 
    @BeforeEach
    public void setUp(){
-      access = jwtService.getAccessToken("Angel");
-      refresh = jwtService.getRefreshToken("Angel");
+      access = jwtService.generateAccessToken("Angel");
+      refresh = jwtService.generateRefreshToken("Angel");
       weak = jwtService.buildToken("Angel", 2000);
    }
 

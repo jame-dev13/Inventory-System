@@ -30,6 +30,7 @@ public class JwtServiceImp implements JwtService {
       byte[] bytes = Decoders.BASE64.decode(SECRET_KEY);
       return Keys.hmacShaKeyFor(bytes);
    }
+
    private <T> T getClaim(String jwt, Function<Claims, T> function) {
       try {
          Claims claims = Jwts.parserBuilder()
@@ -55,19 +56,19 @@ public class JwtServiceImp implements JwtService {
    }
 
    @Override
-   public String getAccessToken(String username) {
+   public String generateAccessToken(String username) {
       return buildToken(username, Long.parseLong(SECRET_EXPIRATION));
    }
 
    @Override
-   public String getRefreshToken(String username) {
+   public String generateRefreshToken(String username) {
       return buildToken(username, Long.parseLong(REFRESH_EXPIRATION));
    }
 
    @Override
    public boolean isTokenValid(String jwt, String username) {
       try {
-         return Objects.equals(extractUsername(jwt), username) && !isExpired(jwt);
+         return isSameSubject(jwt, username) && !isExpired(jwt);
       } catch (ExpiredJwtException | SignatureException | UnsupportedJwtException | MalformedJwtException e) {
          return false;
       }
@@ -75,7 +76,11 @@ public class JwtServiceImp implements JwtService {
 
    @Override
    public boolean isExpired(String jwt) {
-      return extractExpiration(jwt).before(new Date());
+      Date expiration = extractExpiration(jwt);
+      if(expiration == null){
+         return true; // expired because getClaim returned true
+      }
+      return expiration.before(new Date());
    }
 
    @Override
@@ -86,5 +91,13 @@ public class JwtServiceImp implements JwtService {
    @Override
    public Date extractExpiration(String jwt) {
       return getClaim(jwt, Claims::getExpiration);
+   }
+
+   private boolean isSameSubject(String jwt, String username){
+      String subject = extractUsername(jwt);
+      if(subject == null){
+         return false;
+      }
+      return Objects.equals(subject, username);
    }
 }
