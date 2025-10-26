@@ -1,7 +1,9 @@
 package jame.dev.inventory.models;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,14 +23,25 @@ public class CustomerEntity {
    private Long id;
 
    @Column(name = "name", length = 80, nullable = false)
+   @NotBlank
    private String name;
+
    @Column(name = "last_name", length = 80, nullable = false)
+   @NotBlank
    private String lastName;
+
    @Column(name = "email", length = 80, nullable = false, unique = true)
+   @NotBlank
+   @Nonnull
    @Email
    private String email;
+
    @Column(name = "phone", nullable = false, unique = true)
+   @NotBlank
+   @Nonnull
    private BigInteger phone;
+
    @Column(name = "age", nullable = false)
+   @NotBlank
    private int age;
 }

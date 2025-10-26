@@ -1,5 +1,6 @@
 package jame.dev.inventory.models;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -33,13 +34,17 @@ public class UserEntity {
    @Column(name = "email", unique = true, length = 100, nullable = false)
    @Email
    @NotBlank
+   @Nonnull
    private String email;
 
    @Column(name = "password", nullable = false)
    @NotBlank
+   @Nonnull
    private String password;
 
    @Column(name = "token", unique = true, length = 6, nullable = false)
+   @Nonnull
+   @NotBlank
    private String token;
 
    @Column(name = "verified", nullable = false)

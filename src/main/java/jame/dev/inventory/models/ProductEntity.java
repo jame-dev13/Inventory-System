@@ -1,10 +1,9 @@
 package jame.dev.inventory.models;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -21,14 +20,18 @@ public class ProductEntity {
    private Long id;
 
    @Column(name = "description", length = 120, nullable = false)
+   @NotBlank
+   @Nonnull
    private String description;
 
    @Column(name = "stock", nullable = false)
    private int stock;
 
    @Column(name = "unit_price", precision = 10, scale = 2)
+   @Nonnull
    private BigDecimal unitPrice;
 
    @OneToOne
+   @NonNull
    private ProviderEntity provider;
 }

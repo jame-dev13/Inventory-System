@@ -1,7 +1,9 @@
 package jame.dev.inventory.models;
 
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jame.dev.inventory.models.enums.EJobTitle;
 import jame.dev.inventory.models.enums.EShift;
 import lombok.AllArgsConstructor;
@@ -24,10 +26,13 @@ public class EmployeeEntity {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
-   @OneToOne(cascade = CascadeType.ALL)
+   @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+   @Nonnull
    private UserEntity user;
 
    @Column(name = "job_title", unique = true, nullable = false)
+   @NotBlank
+   @Nonnull
    @Enumerated(EnumType.STRING)
    private EJobTitle jobTitle;
 
@@ -35,6 +40,8 @@ public class EmployeeEntity {
    private BigDecimal salary;
 
    @Column(name = "shift", nullable = false, length = 12)
+   @NotBlank
+   @Nonnull
    @Enumerated(EnumType.STRING)
    private EShift shift;
 }

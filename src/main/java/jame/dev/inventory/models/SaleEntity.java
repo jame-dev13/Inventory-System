@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -25,7 +26,7 @@ public class SaleEntity {
    @JoinTable(name = "sell_orders",
            joinColumns = @JoinColumn(name = "id_sale"),
            inverseJoinColumns = @JoinColumn(name = "id_order"))
-   private List<SaleOrderEntity> saleOrders;
+   private List<SaleOrderEntity> saleOrders = new ArrayList<>();
 
    @OneToOne
    private EmployeeEntity employee;

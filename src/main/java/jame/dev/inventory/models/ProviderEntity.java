@@ -1,5 +1,6 @@
 package jame.dev.inventory.models;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -21,12 +22,15 @@ public class ProviderEntity {
    private Long id;
 
    @Column(name = "name", length = 80, nullable = false, unique = true)
+   @Nonnull
    private String name;
 
    @Column(name = "cellphone", unique = true, nullable = false)
+   @Nonnull
    private BigInteger cellphone;
 
    @Column(name = "email", unique = true, nullable = false)
    @Email
+   @Nonnull
    private String email;
 }
