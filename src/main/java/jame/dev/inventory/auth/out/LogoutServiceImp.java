@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -16,18 +17,20 @@ public class LogoutServiceImp implements LogoutService {
 
    @Override
    public void logout(String token) {
-      if(token == null || !token.startsWith("Bearer ")){
+      if (token == null || !token.startsWith("Bearer ")) {
          throw new IllegalArgumentException("Token format invalid.");
       }
       String jwt = token.substring(7);
-      Date expirationDate = jwtService.extractExpiration(jwt);
+      Date expirationDate = Optional.ofNullable(jwtService.extractExpiration(jwt))
+              .orElseThrow(() -> new NullPointerException("Cannot extract expiration, claims are null."));
       long ttlSeconds = (expirationDate.getTime() - System.currentTimeMillis()) / 1000;
 
       if (ttlSeconds > 0) {
          tokenService.save(jwt, ttlSeconds);
          System.out.println("Token blacklisted for " + ttlSeconds + " seconds");
-      } else {
-         System.out.println("Token already expired, no need to blacklist");
+         return;
       }
+
+      System.out.println("Token already expired, no need to blacklist");
    }
 }

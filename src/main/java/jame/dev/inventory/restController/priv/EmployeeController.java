@@ -1,4 +1,4 @@
-package jame.dev.inventory.endpoints.priv;
+package jame.dev.inventory.restController.priv;
 
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/emp")
 @PreAuthorize("hasRole('EMPLOYEE')")
-public class EmployeeAuthEP {
+public class EmployeeController {
 
    @GetMapping("/greet")
    public String greet(){

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 @AllArgsConstructor
@@ -34,11 +35,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
       }
 
       String jwt = tokenHeader.substring(7);
-      System.out.println(blacklist.contains(jwt));
+//      System.out.println(blacklist.contains(jwt));
       if(blacklist.contains(jwt)){
          throw new TokenReusedException("Token revoked.");
       }
-      String username = jwtService.extractUsername(jwt);
+      String username = Optional.ofNullable(jwtService.extractUsername(jwt))
+              .orElseThrow(() -> new NullPointerException("Cannot extract, claims are null."));
       boolean isValid = jwtService.isTokenValid(jwt, username);
 
       if (!isValid) {
