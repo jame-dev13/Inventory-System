@@ -2,20 +2,22 @@ package jame.dev.inventory.service.out;
 
 import jame.dev.inventory.models.PurchaseEntity;
 import jame.dev.inventory.repo.IPurchaseRepository;
-import jame.dev.inventory.service.in.IPurchaseService;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import jame.dev.inventory.service.in.PurchaseService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 
 @Service
-@AllArgsConstructor
-public class PurchaseService implements IPurchaseService {
-   @Autowired
+public class PurchaseServiceImp implements PurchaseService {
+
    private final IPurchaseRepository repo;
+
+   public PurchaseServiceImp(IPurchaseRepository repo) {
+      this.repo = repo;
+   }
 
    @Override
    public List<PurchaseEntity> getAll() {
@@ -28,11 +30,13 @@ public class PurchaseService implements IPurchaseService {
    }
 
    @Override
+   @Transactional
    public PurchaseEntity save(PurchaseEntity purchase) {
       return repo.save(purchase);
    }
 
    @Override
+   @Transactional
    public void deleteUserById(Long id) {
       repo.deleteById(id);
    }

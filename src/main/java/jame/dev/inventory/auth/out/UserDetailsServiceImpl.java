@@ -1,7 +1,7 @@
 package jame.dev.inventory.auth.out;
 
 import jame.dev.inventory.models.UserEntity;
-import jame.dev.inventory.service.in.IUserService;
+import jame.dev.inventory.service.in.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
    @Autowired
-   private final IUserService service;
+   private final UserService service;
 
    @Override
    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

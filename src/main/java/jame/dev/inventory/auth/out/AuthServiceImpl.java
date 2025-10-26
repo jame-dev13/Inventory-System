@@ -11,7 +11,7 @@ import jame.dev.inventory.jwt.in.JwtService;
 import jame.dev.inventory.models.RoleEntity;
 import jame.dev.inventory.models.UserEntity;
 import jame.dev.inventory.models.enums.ERole;
-import jame.dev.inventory.service.in.IUserService;
+import jame.dev.inventory.service.in.UserService;
 import jame.dev.inventory.utils.TokenGeneratorUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 public class AuthServiceImpl implements AuthService {
 
    @Autowired
-   private final IUserService userService;
+   private final UserService userService;
    private final JwtService jwtService;
    private final AuthenticationManager auth;
 

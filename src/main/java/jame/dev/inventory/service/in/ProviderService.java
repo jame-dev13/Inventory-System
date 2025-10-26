@@ -5,7 +5,7 @@ import jame.dev.inventory.models.ProviderEntity;
 import java.util.List;
 import java.util.Optional;
 
-public interface IProviderService {
+public interface ProviderService {
    List<ProviderEntity> getAll();
    Optional<ProviderEntity> getUserById(Long id);
    ProviderEntity save(ProviderEntity provider);

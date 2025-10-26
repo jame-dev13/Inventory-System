@@ -2,19 +2,20 @@ package jame.dev.inventory.service.out;
 
 import jame.dev.inventory.models.ProductEntity;
 import jame.dev.inventory.repo.IProductRepository;
-import jame.dev.inventory.service.in.IProductService;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import jame.dev.inventory.service.in.ProductService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
-public class ProductService implements IProductService {
-   @Autowired
+public class ProductServiceImp implements ProductService {
    private final IProductRepository repo;
+
+   public ProductServiceImp(IProductRepository repo) {
+      this.repo = repo;
+   }
 
    @Override
    public List<ProductEntity> getAll() {
@@ -27,11 +28,13 @@ public class ProductService implements IProductService {
    }
 
    @Override
+   @Transactional
    public ProductEntity save(ProductEntity product) {
       return repo.save(product);
    }
 
    @Override
+   @Transactional
    public void deleteUserById(Long id) {
       repo.deleteById(id);
    }

@@ -2,9 +2,7 @@ package jame.dev.inventory.service.out;
 
 import jame.dev.inventory.models.UserEntity;
 import jame.dev.inventory.repo.IUserRepository;
-import jame.dev.inventory.service.in.IUserService;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import jame.dev.inventory.service.in.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,10 +10,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
-public class UserService implements IUserService {
-   @Autowired
+public class UserServiceImp implements UserService {
+
    private final IUserRepository repo;
+
+   public UserServiceImp(IUserRepository repo) {
+      this.repo = repo;
+   }
 
    @Override
    public List<UserEntity> getAll() {

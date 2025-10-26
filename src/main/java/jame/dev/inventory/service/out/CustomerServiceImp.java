@@ -2,18 +2,19 @@ package jame.dev.inventory.service.out;
 
 import jame.dev.inventory.models.CustomerEntity;
 import jame.dev.inventory.repo.ICustomerRepository;
-import jame.dev.inventory.service.in.ICustomerService;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import jame.dev.inventory.service.in.CustomerService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 @Service
-@AllArgsConstructor
-public class CustomerService implements ICustomerService {
-   @Autowired
+public class CustomerServiceImp implements CustomerService {
+
    private final ICustomerRepository repo;
+   public CustomerServiceImp(ICustomerRepository repo) {
+      this.repo = repo;
+   }
 
    @Override
    public List<CustomerEntity> getAll() {
@@ -26,11 +27,13 @@ public class CustomerService implements ICustomerService {
    }
 
    @Override
+   @Transactional
    public CustomerEntity save(CustomerEntity customer) {
       return repo.save(customer);
    }
 
    @Override
+   @Transactional
    public void deleteUserById(Long id) {
       repo.deleteById(id);
    }

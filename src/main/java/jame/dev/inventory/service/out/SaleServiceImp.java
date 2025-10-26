@@ -2,20 +2,22 @@ package jame.dev.inventory.service.out;
 
 import jame.dev.inventory.models.SaleEntity;
 import jame.dev.inventory.repo.ISaleRepository;
-import jame.dev.inventory.service.in.ISaleService;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import jame.dev.inventory.service.in.SaleService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 
 @Service
-@AllArgsConstructor
-public class SaleService implements ISaleService {
-   @Autowired
+public class SaleServiceImp implements SaleService {
+
    private final ISaleRepository repo;
+
+   public SaleServiceImp(ISaleRepository repo) {
+      this.repo = repo;
+   }
 
    @Override
    public List<SaleEntity> getAll() {
@@ -28,11 +30,13 @@ public class SaleService implements ISaleService {
    }
 
    @Override
+   @Transactional
    public SaleEntity save(SaleEntity sale) {
       return repo.save(sale);
    }
 
    @Override
+   @Transactional
    public void deleteUserById(Long id) {
       repo.deleteById(id);
    }

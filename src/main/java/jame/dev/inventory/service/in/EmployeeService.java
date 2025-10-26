@@ -5,7 +5,7 @@ import jame.dev.inventory.models.EmployeeEntity;
 import java.util.List;
 import java.util.Optional;
 
-public interface IEmployeeService {
+public interface EmployeeService {
    List<EmployeeEntity> getAll();
    Optional<EmployeeEntity> getUserById(Long id);
    EmployeeEntity save(EmployeeEntity employee);

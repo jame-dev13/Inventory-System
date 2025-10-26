@@ -2,20 +2,21 @@ package jame.dev.inventory.service.out;
 
 import jame.dev.inventory.models.ProviderEntity;
 import jame.dev.inventory.repo.IProviderRepository;
-import jame.dev.inventory.service.in.IProviderService;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import jame.dev.inventory.service.in.ProviderService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
-public class ProviderService implements IProviderService {
+public class ProviderServiceImp implements ProviderService {
 
-   @Autowired
    private final IProviderRepository repo;
+
+   public ProviderServiceImp(IProviderRepository repo) {
+      this.repo = repo;
+   }
 
    @Override
    public List<ProviderEntity> getAll() {
@@ -28,11 +29,13 @@ public class ProviderService implements IProviderService {
    }
 
    @Override
+   @Transactional
    public ProviderEntity save(ProviderEntity provider) {
       return repo.save(provider);
    }
 
    @Override
+   @Transactional
    public void deleteUserById(Long id) {
       repo.deleteById(id);
    }
