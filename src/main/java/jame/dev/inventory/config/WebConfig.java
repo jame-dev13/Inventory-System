@@ -3,6 +3,7 @@ package jame.dev.inventory.config;
 import jakarta.servlet.http.HttpServletResponse;
 import jame.dev.inventory.auth.filters.JwtAuthorizationFilter;
 import jame.dev.inventory.auth.in.LogoutService;
+import jame.dev.inventory.factories.CookieFactory;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +37,7 @@ public class WebConfig {
    @Autowired
    private final JwtAuthorizationFilter filter;
    private final LogoutService logoutService;
+   private final CookieFactory cookieFactory;
 
    @Bean
    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -54,6 +56,7 @@ public class WebConfig {
                  logout.logoutUrl("/v1/auth/logout")
                          .addLogoutHandler((request, response, authentication) -> {
                             String authHeader = request.getHeader("Authorization");
+                            cookieFactory.clearCookie();
                             logoutService.logout(authHeader);
                          })
                          .logoutSuccessHandler((request, response, authentication) -> {
@@ -80,7 +83,7 @@ public class WebConfig {
    public CorsConfigurationSource corsConfigurationSource() {
       CorsConfiguration cors = new CorsConfiguration();
       cors.setAllowedHeaders(List.of("Content-Type", "Access-Control-Allow-Headers", "Authorization"));
-      cors.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
+      cors.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
       cors.setAllowedOrigins(List.of("http://localhost:5173"));
       cors.setAllowCredentials(true);
       UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
