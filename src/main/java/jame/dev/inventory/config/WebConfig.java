@@ -4,8 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jame.dev.inventory.auth.filters.JwtAuthorizationFilter;
 import jame.dev.inventory.auth.in.LogoutService;
 import jame.dev.inventory.factories.CookieFactory;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,13 +30,19 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@AllArgsConstructor
 public class WebConfig {
 
-   @Autowired
    private final JwtAuthorizationFilter filter;
    private final LogoutService logoutService;
    private final CookieFactory cookieFactory;
+
+   @Value("${app.mapping.auth}")
+   private String requestMatch;
+   public WebConfig(JwtAuthorizationFilter filter, LogoutService logoutService, CookieFactory cookieFactory) {
+      this.filter = filter;
+      this.logoutService = logoutService;
+      this.cookieFactory = cookieFactory;
+   }
 
    @Bean
    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -45,7 +50,7 @@ public class WebConfig {
               .csrf(AbstractHttpConfigurer::disable)
               .cors(cors -> corsConfigurationSource())
               .authorizeHttpRequests(r ->
-                      r.requestMatchers("/v1/auth/**")
+                      r.requestMatchers("%s/**".formatted(requestMatch))
                               .permitAll()
                               .anyRequest()
                               .authenticated())

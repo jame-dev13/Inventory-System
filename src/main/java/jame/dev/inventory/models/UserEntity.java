@@ -42,14 +42,6 @@ public class UserEntity {
    @Nonnull
    private String password;
 
-   @Column(name = "token", unique = true, length = 6, nullable = false)
-   @Nonnull
-   @NotBlank
-   private String token;
-
-   @Column(name = "verified", nullable = false)
-   private boolean verified;
-
    @OneToMany(fetch = FetchType.EAGER, targetEntity = RoleEntity.class,
            cascade = CascadeType.PERSIST, orphanRemoval = true)
    @JoinTable(name = "user_roles",
