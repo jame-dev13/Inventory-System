@@ -26,7 +26,10 @@ public class EmployeeEntity {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
-   @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+   @OneToOne
+   @JoinColumn(name = "user_id",
+           foreignKey = @ForeignKey(name = "fk_user_id",
+                   foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE"))
    @Nonnull
    private UserEntity user;
 
