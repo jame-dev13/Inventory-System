@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CookieFactory {
 
-   private static final String COOKIE_NAME = "JWT_ACCESS";
+   private static final String COOKIE_NAME = "_HOST-JWT_ACCESS";
 
    @Value("${app.path}")
    private String path;
@@ -19,7 +19,7 @@ public class CookieFactory {
       Cookie cookie = new Cookie(COOKIE_NAME, token);
       cookie.setSecure(false);
       cookie.setHttpOnly(true);
-      cookie.setPath(path);
+      cookie.setPath("/");
       cookie.setMaxAge((int) expiration / 1000);
       return cookie;
    }
@@ -28,7 +28,7 @@ public class CookieFactory {
       Cookie cookie = new Cookie(COOKIE_NAME, "");
       cookie.setSecure(false);
       cookie.setHttpOnly(true);
-      cookie.setPath(path);
+      cookie.setPath("/");
       cookie.setMaxAge(0);
    }
 }
