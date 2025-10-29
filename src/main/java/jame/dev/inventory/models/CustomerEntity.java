@@ -44,4 +44,8 @@ public class CustomerEntity {
    @Column(name = "age", nullable = false)
    @NotBlank
    private int age;
+
+   public String getFullName(){
+      return this.getName() + " " + this.getLastName();
+   }
 }

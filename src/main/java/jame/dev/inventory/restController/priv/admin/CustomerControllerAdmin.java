@@ -5,6 +5,7 @@ import jakarta.annotation.Nonnull;
 import jame.dev.inventory.dtos.customer.in.CustomerDtoIn;
 import jame.dev.inventory.dtos.customer.out.CustomerDto;
 import jame.dev.inventory.exceptions.CustomerNotFoundException;
+import jame.dev.inventory.mapper.in.DtoMapper;
 import jame.dev.inventory.models.CustomerEntity;
 import jame.dev.inventory.service.in.CustomerService;
 import org.springframework.http.MediaType;
@@ -20,22 +21,18 @@ import java.util.List;
 public class CustomerControllerAdmin {
 
    private final CustomerService customerService;
+   private final DtoMapper<CustomerDto, CustomerEntity> mapper;
 
-   public CustomerControllerAdmin(CustomerService customerService) {
+   public CustomerControllerAdmin(CustomerService customerService, DtoMapper<CustomerDto, CustomerEntity> mapper) {
       this.customerService = customerService;
+      this.mapper = mapper;
    }
 
    @GetMapping("/customers")
    public ResponseEntity<List<CustomerDto>> getCustomers() {
       List<CustomerDto> customersDtoList = customerService.getAll()
               .stream()
-              .map(c -> CustomerDto.builder()
-                      .id(c.getId())
-                      .name(c.getName() + " " + c.getLastName())
-                      .email(c.getEmail())
-                      .phone(c.getPhone())
-                      .age(c.getAge())
-                      .build())
+              .map(mapper::mapToDto)
               .toList();
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
@@ -44,7 +41,7 @@ public class CustomerControllerAdmin {
 
    @PostMapping("/addCustomer")
    public ResponseEntity<CustomerDto> addCustomer(@RequestBody CustomerDtoIn customerDto){
-      CustomerEntity customer = customerService.save(
+      CustomerEntity customerSaved = customerService.save(
               CustomerEntity.builder()
                       .name(customerDto.name())
                       .lastName(customerDto.lastName())
@@ -54,18 +51,9 @@ public class CustomerControllerAdmin {
                       .build()
       );
 
-      CustomerDto customerResponseDto = CustomerDto
-              .builder()
-              .id(customer.getId())
-              .name(customer.getName() + " " + customer.getLastName())
-              .email(customer.getEmail())
-              .phone(customer.getPhone())
-              .age(customer.getAge())
-              .build();
-
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
-              .body(customerResponseDto);
+              .body(mapper.mapToDto(customerSaved));
    }
 
    @PatchMapping("/patchCustomer/{id}")
@@ -80,18 +68,10 @@ public class CustomerControllerAdmin {
       customer.setAge(customerDto.age());
 
       CustomerEntity customerPatched = customerService.save(customer);
-      CustomerDto customerDtoResponse = CustomerDto
-              .builder()
-              .id(customerPatched.getId())
-              .name(customerPatched.getName() + " "+ customerPatched.getLastName())
-              .email(customerPatched.getEmail())
-              .phone(customerPatched.getPhone())
-              .age(customerPatched.getAge())
-              .build();
 
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
-              .body(customerDtoResponse);
+              .body(mapper.mapToDto(customerPatched));
    }
 
    @DeleteMapping("/dropCustomer/{id}")

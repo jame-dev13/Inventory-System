@@ -2,6 +2,7 @@ package jame.dev.inventory.restController.priv.admin;
 
 import jame.dev.inventory.dtos.user.in.UserEmpInputInfo;
 import jame.dev.inventory.dtos.user.out.UserInfoDto;
+import jame.dev.inventory.mapper.in.DtoMapper;
 import jame.dev.inventory.models.EmployeeEntity;
 import jame.dev.inventory.models.RoleEntity;
 import jame.dev.inventory.models.UserEntity;
@@ -22,63 +23,51 @@ public class UserControllerAdmin {
 
    private final UserService userService;
    private final EmployeeService employeeService;
+   private final DtoMapper<UserInfoDto, UserEntity> mapper;
 
-   public UserControllerAdmin(UserService userService, EmployeeService employeeService) {
+   public UserControllerAdmin(UserService userService, EmployeeService employeeService, DtoMapper<UserInfoDto, UserEntity> mapper) {
       this.userService = userService;
       this.employeeService = employeeService;
+      this.mapper = mapper;
    }
 
    @GetMapping("/users")
-   public ResponseEntity<List<UserInfoDto>> getUsers(){
-      List<UserInfoDto> userDto = userService.getAll()
+   public ResponseEntity<List<UserInfoDto>> getUsers() {
+      List<UserInfoDto> userDtoList = userService.getAll()
               .stream()
-              .map(u -> UserInfoDto.builder()
-                      .id(u.getId())
-                      .name(u.getName())
-                      .lastName(u.getLastName())
-                      .email(u.getEmail())
-                      .role(u.getRoles().stream().map(RoleEntity::getRole)
-                              .collect(Collectors.toSet()))
-              .build())
+              .map(mapper::mapToDto)
               .toList();
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
-              .body(userDto);
+              .body(userDtoList);
    }
 
    @PostMapping("/addUser")
    public ResponseEntity<UserInfoDto> addUser(@RequestBody UserEmpInputInfo userDto) {
-      UserEntity userEntity = UserEntity.builder()
-              .id(null)
-              .name(userDto.name())
-              .lastName(userDto.lastName())
-              .email(userDto.email())
-              .password(userDto.password())
-              .roles(userDto.role().stream().map(r -> new RoleEntity(null, r)).collect(Collectors.toSet()))
-              .build();
-      var user = userService.save(userEntity);
+      UserEntity userSaved = userService.save(
+              UserEntity.builder()
+                      .name(userDto.name())
+                      .lastName(userDto.lastName())
+                      .email(userDto.email())
+                      .password(userDto.password())
+                      .roles(userDto.role().stream().map(r -> new RoleEntity(null, r)).collect(Collectors.toSet()))
+                      .build()
+      );
 
-      EmployeeEntity employeeEntity = EmployeeEntity.builder()
-              .user(user)
-              .jobTitle(userDto.jobTitle())
-              .salary(userDto.salary())
-              .shift(userDto.shift())
-              .build();
-      employeeService.save(employeeEntity);
+      employeeService.save(EmployeeEntity.builder()
+                      .user(userSaved)
+                      .jobTitle(userDto.jobTitle())
+                      .salary(userDto.salary())
+                      .shift(userDto.shift())
+                      .build());
 
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
-              .body(UserInfoDto.builder()
-                      .id(user.getId())
-                      .name(user.getName())
-                      .lastName(userDto.lastName())
-                      .email(user.getEmail())
-                      .role(user.getRoles().stream().map(RoleEntity::getRole).collect(Collectors.toSet()))
-                      .build());
+              .body(mapper.mapToDto(userSaved));
    }
 
    @DeleteMapping("/dropUser/{id}")
-   public ResponseEntity<Void> dropUser(@PathVariable long id){
+   public ResponseEntity<Void> dropUser(@PathVariable long id) {
       userService.deleteUserById(id);
       return ResponseEntity.noContent().build();
    }

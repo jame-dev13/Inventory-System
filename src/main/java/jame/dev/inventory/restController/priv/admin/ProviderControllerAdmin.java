@@ -5,6 +5,7 @@ import jame.dev.inventory.dtos.product.out.ProductDto;
 import jame.dev.inventory.dtos.provider.in.ProviderInDto;
 import jame.dev.inventory.dtos.provider.out.ProviderDto;
 import jame.dev.inventory.exceptions.ProviderProductNotFoundException;
+import jame.dev.inventory.mapper.in.DtoMapper;
 import jame.dev.inventory.models.ProductEntity;
 import jame.dev.inventory.models.ProviderEntity;
 import jame.dev.inventory.service.in.ProductService;
@@ -31,22 +32,21 @@ public class ProviderControllerAdmin {
 
    private final ProviderService providerService;
    private final ProductService productService;
+   private final DtoMapper<ProviderDto, ProviderEntity> providerMapper;
+   private final DtoMapper<ProductDto, ProductEntity> productMapper;
 
-   public ProviderControllerAdmin(ProviderService providerService, ProductService productService) {
+   public ProviderControllerAdmin(ProviderService providerService, ProductService productService, DtoMapper<ProviderDto, ProviderEntity> providerMapper, DtoMapper<ProductDto, ProductEntity> productMapper) {
       this.providerService = providerService;
       this.productService = productService;
+      this.providerMapper = providerMapper;
+      this.productMapper = productMapper;
    }
 
    @GetMapping("/providers")
    public ResponseEntity<List<ProviderDto>> getProviders() {
       List<ProviderDto> providerDtoList = providerService.getAll()
               .stream()
-              .map(p -> ProviderDto.builder()
-                      .id(p.getId())
-                      .name(p.getName())
-                      .phone(p.getPhone())
-                      .email(p.getEmail())
-                      .build())
+              .map(providerMapper::mapToDto)
               .toList();
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
@@ -61,14 +61,9 @@ public class ProviderControllerAdmin {
               .stream()
               .filter(p -> filter.test(p.getProvider().getId()))
               .toList();
+
       List<ProductDto> productDtosList = filteredList.stream()
-              .map(p -> ProductDto.builder()
-                      .id(p.getId())
-                      .description(p.getDescription())
-                      .stock(p.getStock())
-                      .idProvider(p.getProvider().getId())
-                      .unitPrice(p.getUnitPrice())
-                      .build())
+              .map(productMapper::mapToDto)
               .toList();
 
       return ResponseEntity.ok()
@@ -85,15 +80,9 @@ public class ProviderControllerAdmin {
                       .email(providerDto.email())
                       .build()
       );
-      ProviderDto providerDtoResponse = ProviderDto.builder()
-              .id(provider.getId())
-              .name(provider.getName())
-              .phone(provider.getPhone())
-              .email(provider.getEmail())
-              .build();
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
-              .body(providerDtoResponse);
+              .body(providerMapper.mapToDto(provider));
    }
 
    @PatchMapping("/patchProvider/{id}")
@@ -106,16 +95,9 @@ public class ProviderControllerAdmin {
       providerEntity.setEmail(providerDto.email());
 
       ProviderEntity providerPatched = providerService.save(providerEntity);
-      ProviderDto providerDtoResponse = ProviderDto.builder()
-              .id(providerPatched.getId())
-              .name(providerPatched.getName())
-              .phone(providerPatched.getPhone())
-              .email(providerPatched.getEmail())
-              .build();
-
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
-              .body(providerDtoResponse);
+              .body(providerMapper.mapToDto(providerPatched));
    }
 
    @DeleteMapping("/dropProvider/{id}")
