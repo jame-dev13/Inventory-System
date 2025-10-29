@@ -1,4 +1,4 @@
-package jame.dev.inventory.restController.priv;
+package jame.dev.inventory.restController.priv.employee;
 
 
 import org.springframework.security.access.prepost.PreAuthorize;

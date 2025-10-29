@@ -23,7 +23,7 @@ public class EmployeeServiceImp implements EmployeeService {
    }
 
    @Override
-   public Optional<EmployeeEntity> getUserById(Long id) {
+   public Optional<EmployeeEntity> getEmployeeById(Long id) {
       return repo.findById(id);
    }
 
@@ -35,7 +35,7 @@ public class EmployeeServiceImp implements EmployeeService {
 
    @Override
    @Transactional
-   public void deleteUserById(Long id) {
+   public void deleteEmployeeById(Long id) {
       repo.deleteById(id);
    }
 }

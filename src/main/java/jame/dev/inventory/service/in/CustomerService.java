@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface CustomerService {
    List<CustomerEntity> getAll();
-   Optional<CustomerEntity> getUserById(Long id);
+   Optional<CustomerEntity> getCustomerById(Long id);
    CustomerEntity save(CustomerEntity customer);
-   void deleteUserById(Long id);
+   void deleteCustomerById(Long id);
 }

@@ -28,8 +28,9 @@ public class EmployeeEntity {
 
    @OneToOne
    @JoinColumn(name = "user_id",
-           foreignKey = @ForeignKey(name = "fk_user_id",
-                   foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE"))
+           foreignKey =
+           @ForeignKey(name = "fk_user_id",
+                   foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE"))
    @Nonnull
    private UserEntity user;
 

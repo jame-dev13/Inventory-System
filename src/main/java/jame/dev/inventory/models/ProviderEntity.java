@@ -25,9 +25,9 @@ public class ProviderEntity {
    @Nonnull
    private String name;
 
-   @Column(name = "cellphone", unique = true, nullable = false)
+   @Column(name = "phone", unique = true, nullable = false)
    @Nonnull
-   private BigInteger cellphone;
+   private BigInteger phone;
 
    @Column(name = "email", unique = true, nullable = false)
    @Email

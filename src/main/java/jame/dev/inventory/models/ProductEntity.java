@@ -31,7 +31,11 @@ public class ProductEntity {
    @Nonnull
    private BigDecimal unitPrice;
 
-   @OneToOne
+   @ManyToOne
+   @JoinColumn(name = "id_provider",
+           foreignKey =
+           @ForeignKey(name = "fk_provider_prod",
+                   foreignKeyDefinition = "FOREIGN KEY (id_provider) REFERENCES providers(id) ON DELETE CASCADE ON UPDATE CASCADE"))
    @NonNull
    private ProviderEntity provider;
 }

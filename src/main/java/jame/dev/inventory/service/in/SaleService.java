@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface SaleService {
    List<SaleEntity> getAll();
-   Optional<SaleEntity> getUserById(Long id);
+   Optional<SaleEntity> getSaleById(Long id);
    SaleEntity save(SaleEntity sale);
-   void deleteUserById(Long id);
+   void deleteSaleById(Long id);
 }

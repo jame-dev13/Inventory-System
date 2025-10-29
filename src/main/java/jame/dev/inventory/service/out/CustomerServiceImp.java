@@ -22,7 +22,7 @@ public class CustomerServiceImp implements CustomerService {
    }
 
    @Override
-   public Optional<CustomerEntity> getUserById(Long id) {
+   public Optional<CustomerEntity> getCustomerById(Long id) {
       return repo.findById(id);
    }
 
@@ -34,7 +34,7 @@ public class CustomerServiceImp implements CustomerService {
 
    @Override
    @Transactional
-   public void deleteUserById(Long id) {
+   public void deleteCustomerById(Long id) {
       repo.deleteById(id);
    }
 }

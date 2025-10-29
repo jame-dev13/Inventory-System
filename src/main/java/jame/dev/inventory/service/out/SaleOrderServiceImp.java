@@ -24,7 +24,7 @@ public class SaleOrderServiceImp implements SaleOrderService {
    }
 
    @Override
-   public Optional<SaleOrderEntity> getUserById(Long id) {
+   public Optional<SaleOrderEntity> getSaleOrderById(Long id) {
       return repo.findById(id);
    }
 
@@ -36,7 +36,7 @@ public class SaleOrderServiceImp implements SaleOrderService {
 
    @Override
    @Transactional
-   public void deleteUserById(Long id) {
+   public void deleteSaleOrderById(Long id) {
       repo.deleteById(id);
    }
 }

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface EmployeeService {
    List<EmployeeEntity> getAll();
-   Optional<EmployeeEntity> getUserById(Long id);
+   Optional<EmployeeEntity> getEmployeeById(Long id);
    EmployeeEntity save(EmployeeEntity employee);
-   void deleteUserById(Long id);
+   void deleteEmployeeById(Long id);
 }

@@ -1,6 +1,5 @@
-package jame.dev.inventory.restController.priv;
+package jame.dev.inventory.restController.priv.admin;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jame.dev.inventory.dtos.user.in.UserEmpInputInfo;
 import jame.dev.inventory.dtos.user.out.UserInfoDto;
 import jame.dev.inventory.models.EmployeeEntity;
@@ -19,13 +18,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("${app.mapping.admin}")
 @PreAuthorize("hasRole('ADMIN')")
-public class AdminController {
-   private static final ObjectMapper mapper = new ObjectMapper();
+public class UserControllerAdmin {
 
    private final UserService userService;
    private final EmployeeService employeeService;
 
-   public AdminController(UserService userService, EmployeeService employeeService) {
+   public UserControllerAdmin(UserService userService, EmployeeService employeeService) {
       this.userService = userService;
       this.employeeService = employeeService;
    }

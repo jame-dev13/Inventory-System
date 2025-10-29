@@ -23,7 +23,7 @@ public class ProductServiceImp implements ProductService {
    }
 
    @Override
-   public Optional<ProductEntity> getUserById(Long id) {
+   public Optional<ProductEntity> getProductById(Long id) {
       return repo.findById(id);
    }
 
@@ -35,7 +35,7 @@ public class ProductServiceImp implements ProductService {
 
    @Override
    @Transactional
-   public void deleteUserById(Long id) {
+   public void deleteProductById(Long id) {
       repo.deleteById(id);
    }
 }

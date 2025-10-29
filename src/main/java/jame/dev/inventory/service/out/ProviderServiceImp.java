@@ -24,8 +24,13 @@ public class ProviderServiceImp implements ProviderService {
    }
 
    @Override
-   public Optional<ProviderEntity> getUserById(Long id) {
+   public Optional<ProviderEntity> getProviderById(Long id) {
       return repo.findById(id);
+   }
+
+   @Override
+   public Optional<ProviderEntity> getProviderByName(String name) {
+      return repo.findByName(name);
    }
 
    @Override
@@ -36,7 +41,7 @@ public class ProviderServiceImp implements ProviderService {
 
    @Override
    @Transactional
-   public void deleteUserById(Long id) {
+   public void deleteProviderById(Long id) {
       repo.deleteById(id);
    }
 }

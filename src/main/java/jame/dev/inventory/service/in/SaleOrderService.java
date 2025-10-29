@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface SaleOrderService {
    List<SaleOrderEntity> getAll();
-   Optional<SaleOrderEntity> getUserById(Long id);
+   Optional<SaleOrderEntity> getSaleOrderById(Long id);
    SaleOrderEntity save(SaleOrderEntity order);
-   void deleteUserById(Long id);
+   void deleteSaleOrderById(Long id);
 }

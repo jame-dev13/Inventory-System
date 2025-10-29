@@ -7,7 +7,8 @@ import java.util.Optional;
 
 public interface ProviderService {
    List<ProviderEntity> getAll();
-   Optional<ProviderEntity> getUserById(Long id);
+   Optional<ProviderEntity> getProviderById(Long id);
+   Optional<ProviderEntity> getProviderByName(String name);
    ProviderEntity save(ProviderEntity provider);
-   void deleteUserById(Long id);
+   void deleteProviderById(Long id);
 }

@@ -1,9 +1,6 @@
 package jame.dev.inventory.exceptionHandler;
 
-import jame.dev.inventory.exceptions.RefreshTokenException;
-import jame.dev.inventory.exceptions.TokenAlreadyBlacklisted;
-import jame.dev.inventory.exceptions.TokenReusedException;
-import jame.dev.inventory.exceptions.UserAlreadyExistsException;
+import jame.dev.inventory.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -80,9 +77,23 @@ public class GlobalExceptionHandler {
               .body(Map.of("error", "Token Exception: " + ex.getMessage()));
    }
    @ExceptionHandler(TokenAlreadyBlacklisted.class)
-   public ResponseEntity<Map<String, String>> handleTokenAlreadyBlackListed(TokenAlreadyBlacklisted ex){
+   public ResponseEntity<Map<String, String>> handleTokenAlreadyBlackListedException(TokenAlreadyBlacklisted ex){
       return ResponseEntity
               .status(HttpStatus.UNAUTHORIZED)
+              .body(Map.of("error", ex.getMessage()));
+   }
+
+   @ExceptionHandler(ProviderProductNotFoundException.class)
+   public ResponseEntity<Map<String, String>> handleProvideProductNotFoundException(ProviderProductNotFoundException ex){
+      return ResponseEntity
+              .status(HttpStatus.NOT_FOUND)
+              .body(Map.of("error", ex.getMessage()));
+   }
+
+   @ExceptionHandler(ProductNotFoundException.class)
+   public ResponseEntity<Map<String, String>> handleProductNotFoundException(ProductNotFoundException ex){
+      return ResponseEntity
+              .status(HttpStatus.NOT_FOUND)
               .body(Map.of("error", ex.getMessage()));
    }
 //   @ExceptionHandler(Exception.class)
