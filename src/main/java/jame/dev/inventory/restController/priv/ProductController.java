@@ -1,4 +1,4 @@
-package jame.dev.inventory.restController.priv.admin;
+package jame.dev.inventory.restController.priv;
 
 import jakarta.annotation.Nonnull;
 import jame.dev.inventory.dtos.product.in.ProductDtoIn;
@@ -18,21 +18,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("${app.mapping.admin}")
-@PreAuthorize("hasRole('ADMIN')")
-public class ProductControllerAdmin {
+@RequestMapping("${app.mapping}/products")
+@PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
+public class ProductController {
 
    private final ProductService productService;
    private final ProviderService providerService;
    private final DtoMapper<ProductDto, ProductEntity> mapper;
 
-   public ProductControllerAdmin(ProductService productService, ProviderService providerService, DtoMapper<ProductDto, ProductEntity> mapper) {
+   public ProductController(ProductService productService, ProviderService providerService, DtoMapper<ProductDto, ProductEntity> mapper) {
       this.productService = productService;
       this.providerService = providerService;
       this.mapper = mapper;
    }
 
-   @GetMapping("/products")
+   @GetMapping
    public ResponseEntity<List<ProductDto>> getProducts() {
       List<ProductDto> productsDtoList = productService.getAll()
               .stream()
@@ -43,7 +43,7 @@ public class ProductControllerAdmin {
               .body(productsDtoList);
    }
 
-   @PostMapping("/addProduct")
+   @PostMapping
    public ResponseEntity<ProductDto> addProduct(@RequestBody @Nonnull ProductDtoIn productDto) {
       ProviderEntity provider = providerService.getProviderById(productDto.providerId())
               .orElseThrow(() -> new ProviderProductNotFoundException("Provider not found."));
@@ -60,7 +60,7 @@ public class ProductControllerAdmin {
               .body(mapper.mapToDto(productEntity));
    }
 
-   @PatchMapping("/patchProduct/{id}")
+   @PatchMapping("/{id}")
    public ResponseEntity<ProductDto> patchProduct(@PathVariable @Nonnull Long id, @RequestBody @Nonnull ProductDtoIn productDto) {
       ProductEntity productEntity = productService.getProductById(id)
               .orElseThrow(() -> new ProductNotFoundException("Product not found."));
@@ -80,7 +80,7 @@ public class ProductControllerAdmin {
 
    }
 
-   @DeleteMapping("/dropProduct/{id}")
+   @DeleteMapping("/{id}")
    public ResponseEntity<Void> dropProduct(@PathVariable @Nonnull Long id) {
       productService.deleteProductById(id);
       return ResponseEntity.noContent().build();

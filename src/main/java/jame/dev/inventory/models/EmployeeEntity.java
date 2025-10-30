@@ -48,4 +48,8 @@ public class EmployeeEntity {
    @Nonnull
    @Enumerated(EnumType.STRING)
    private EShift shift;
+
+   public String getFullName(){
+      return this.user.getName() + this.user.getLastName();
+   }
 }

@@ -1,8 +1,12 @@
 package jame.dev.inventory.config;
 
+import jame.dev.inventory.models.EmployeeEntity;
 import jame.dev.inventory.models.RoleEntity;
 import jame.dev.inventory.models.UserEntity;
+import jame.dev.inventory.models.enums.EJobTitle;
 import jame.dev.inventory.models.enums.ERole;
+import jame.dev.inventory.models.enums.EShift;
+import jame.dev.inventory.service.in.EmployeeService;
 import jame.dev.inventory.service.in.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Configuration
@@ -25,7 +30,7 @@ public class InitConfig {
    private String pwdAdmin;
 
    @Bean
-   CommandLineRunner init(UserService service, PasswordEncoder encoder) {
+   CommandLineRunner init(UserService service, EmployeeService employeeService, PasswordEncoder encoder) {
       return args -> {
          UserEntity userEntity = UserEntity.builder()
                  .id(null)
@@ -33,7 +38,7 @@ public class InitConfig {
                  .lastName("adm")
                  .email(emailAdmin)
                  .password(encoder.encode(pwdAdmin))
-                 .roles(Set.of(new RoleEntity(null, ERole.ADMIN)))
+                 .roles(Set.of(new RoleEntity(null, ERole.ADMIN), new RoleEntity(null, ERole.EMPLOYEE)))
                  .build();
          UserEntity userPresent = service.getUserByEmail(userEntity.getEmail())
                  .orElse(null);
@@ -41,7 +46,15 @@ public class InitConfig {
             return;
          }
          service.save(userEntity);
-         log.info("User admin saved.");
+
+         EmployeeEntity employee = EmployeeEntity.builder()
+                 .user(userEntity)
+                 .jobTitle(EJobTitle.ADMINISTRATION)
+                 .salary(BigDecimal.valueOf(30_000.00))
+                 .shift(EShift.MORNING)
+                 .build();
+         employeeService.save(employee);
+         log.info("User admin and Employee saved.");
       };
    }
 }

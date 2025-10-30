@@ -45,7 +45,7 @@ public class UserEntity {
    @OneToMany(fetch = FetchType.EAGER, targetEntity = RoleEntity.class,
            cascade = CascadeType.PERSIST, orphanRemoval = true)
    @JoinTable(name = "user_roles",
-           joinColumns = @JoinColumn(name = "id_user", unique = true,
+           joinColumns = @JoinColumn(name = "id_user",
            foreignKey = @ForeignKey(name = "fk_user_users",
                    foreignKeyDefinition = "FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE")),
            inverseJoinColumns = @JoinColumn(name = "id_role"))

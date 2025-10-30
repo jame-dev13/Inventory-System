@@ -3,6 +3,7 @@ package jame.dev.inventory.exceptionHandler;
 import jame.dev.inventory.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -96,6 +97,20 @@ public class GlobalExceptionHandler {
               .status(HttpStatus.NOT_FOUND)
               .body(Map.of("error", ex.getMessage()));
    }
+
+   @ExceptionHandler(AccessDeniedException.class)
+   public ResponseEntity<Map<String, String>> handleAccessDeniedException(AccessDeniedException ex){
+      return ResponseEntity.status(HttpStatus.FORBIDDEN)
+              .body(Map.of("error", "Access denied."));
+   }
+
+   @ExceptionHandler(SaleOrderNotFoundException.class)
+   public ResponseEntity<Map<String, String>> handleSaleOrderNotFoundException(SaleOrderNotFoundException ex){
+      return ResponseEntity
+              .status(HttpStatus.NOT_FOUND)
+              .body(Map.of("error", "Sale order not found."));
+   }
+
 //   @ExceptionHandler(Exception.class)
 //   public ResponseEntity<Map<String, String>> handleInternalServerError(Exception ex){
 //      return ResponseEntity

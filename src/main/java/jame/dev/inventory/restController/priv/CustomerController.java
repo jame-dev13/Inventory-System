@@ -1,4 +1,4 @@
-package jame.dev.inventory.restController.priv.admin;
+package jame.dev.inventory.restController.priv;
 
 
 import jakarta.annotation.Nonnull;
@@ -16,19 +16,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("${app.mapping.admin}")
-@PreAuthorize("hasRole('ADMIN')")
-public class CustomerControllerAdmin {
+@RequestMapping("${app.mapping}/customers")
+public class CustomerController {
 
    private final CustomerService customerService;
    private final DtoMapper<CustomerDto, CustomerEntity> mapper;
 
-   public CustomerControllerAdmin(CustomerService customerService, DtoMapper<CustomerDto, CustomerEntity> mapper) {
+   public CustomerController(CustomerService customerService, DtoMapper<CustomerDto, CustomerEntity> mapper) {
       this.customerService = customerService;
       this.mapper = mapper;
    }
 
-   @GetMapping("/customers")
+   @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
+   @GetMapping
    public ResponseEntity<List<CustomerDto>> getCustomers() {
       List<CustomerDto> customersDtoList = customerService.getAll()
               .stream()
@@ -39,7 +39,8 @@ public class CustomerControllerAdmin {
               .body(customersDtoList);
    }
 
-   @PostMapping("/addCustomer")
+   @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
+   @PostMapping
    public ResponseEntity<CustomerDto> addCustomer(@RequestBody CustomerDtoIn customerDto){
       CustomerEntity customerSaved = customerService.save(
               CustomerEntity.builder()
@@ -56,7 +57,8 @@ public class CustomerControllerAdmin {
               .body(mapper.mapToDto(customerSaved));
    }
 
-   @PatchMapping("/patchCustomer/{id}")
+   @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
+   @PatchMapping("/{id}")
    public ResponseEntity<CustomerDto> patchCustomer(@PathVariable @Nonnull Long id, @RequestBody @Nonnull  CustomerDtoIn customerDto){
       CustomerEntity customer = customerService.getCustomerById(id)
               .orElseThrow(() -> new CustomerNotFoundException("Customer not found."));
@@ -74,7 +76,8 @@ public class CustomerControllerAdmin {
               .body(mapper.mapToDto(customerPatched));
    }
 
-   @DeleteMapping("/dropCustomer/{id}")
+   @PreAuthorize("hasRole('ADMIN')")
+   @DeleteMapping("/{id}")
    public ResponseEntity<Void> dropCustomer(@PathVariable @Nonnull Long id){
       customerService.deleteCustomerById(id);
       return ResponseEntity.noContent().build();

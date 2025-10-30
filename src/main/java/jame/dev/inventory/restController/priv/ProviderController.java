@@ -1,4 +1,4 @@
-package jame.dev.inventory.restController.priv.admin;
+package jame.dev.inventory.restController.priv;
 
 import jakarta.annotation.Nonnull;
 import jame.dev.inventory.dtos.product.out.ProductDto;
@@ -13,36 +13,29 @@ import jame.dev.inventory.service.in.ProviderService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.function.Predicate;
 
 @RestController
-@RequestMapping("${app.mapping.admin}")
-@PreAuthorize("hasRole('ADMIN')")
-public class ProviderControllerAdmin {
+@RequestMapping("${app.mapping}/providers")
+public class ProviderController {
 
    private final ProviderService providerService;
    private final ProductService productService;
    private final DtoMapper<ProviderDto, ProviderEntity> providerMapper;
    private final DtoMapper<ProductDto, ProductEntity> productMapper;
 
-   public ProviderControllerAdmin(ProviderService providerService, ProductService productService, DtoMapper<ProviderDto, ProviderEntity> providerMapper, DtoMapper<ProductDto, ProductEntity> productMapper) {
+   public ProviderController(ProviderService providerService, ProductService productService, DtoMapper<ProviderDto, ProviderEntity> providerMapper, DtoMapper<ProductDto, ProductEntity> productMapper) {
       this.providerService = providerService;
       this.productService = productService;
       this.providerMapper = providerMapper;
       this.productMapper = productMapper;
    }
 
-   @GetMapping("/providers")
+   @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
+   @GetMapping
    public ResponseEntity<List<ProviderDto>> getProviders() {
       List<ProviderDto> providerDtoList = providerService.getAll()
               .stream()
@@ -53,8 +46,8 @@ public class ProviderControllerAdmin {
               .body(providerDtoList);
    }
 
-   @GetMapping("/providers/{idProvider}/products")
-
+   @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
+   @GetMapping("/{idProvider}/products")
    public ResponseEntity<List<ProductDto>> getProductsByProvider(@PathVariable @Nonnull Long idProvider) {
       Predicate<Long> filter = providerId -> idProvider == providerId.longValue();
       List<ProductEntity> filteredList = productService.getAll()
@@ -71,7 +64,8 @@ public class ProviderControllerAdmin {
               .body(productDtosList);
    }
 
-   @PostMapping("/addProvider")
+   @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
+   @PostMapping
    public ResponseEntity<ProviderDto> addProvider(@RequestBody ProviderInDto providerDto) {
       ProviderEntity provider = providerService.save(
               ProviderEntity.builder()
@@ -85,7 +79,8 @@ public class ProviderControllerAdmin {
               .body(providerMapper.mapToDto(provider));
    }
 
-   @PatchMapping("/patchProvider/{id}")
+   @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
+   @PatchMapping("/{id}")
    public ResponseEntity<ProviderDto> patchProvider(@PathVariable @Nonnull Long id, @RequestBody ProviderInDto providerDto) {
       ProviderEntity providerEntity = providerService.getProviderById(id)
               .orElseThrow(() -> new ProviderProductNotFoundException("Provider not found."));
@@ -100,7 +95,8 @@ public class ProviderControllerAdmin {
               .body(providerMapper.mapToDto(providerPatched));
    }
 
-   @DeleteMapping("/dropProvider/{id}")
+   @PreAuthorize("hasRole('ADMIN')")
+   @DeleteMapping("/{id}")
    public ResponseEntity<Void> dropProvider(@PathVariable @Nonnull Long id) {
       providerService.deleteProviderById(id);
       return ResponseEntity.noContent().build();

@@ -11,7 +11,7 @@ public class EmployeeMapper implements DtoMapper<EmployeeDto, EmployeeEntity> {
    public EmployeeDto mapToDto(EmployeeEntity entity) {
       return EmployeeDto.builder()
               .id(entity.getId())
-              .name("%s %s".formatted(entity.getUser().getName(), entity.getUser().getLastName()))
+              .name(entity.getFullName())
               .jobTitle(entity.getJobTitle())
               .salary(entity.getSalary())
               .shift(entity.getShift())

@@ -1,4 +1,4 @@
-package jame.dev.inventory.restController.priv.admin;
+package jame.dev.inventory.restController.priv;
 
 import jame.dev.inventory.dtos.user.in.UserEmpInputInfo;
 import jame.dev.inventory.dtos.user.out.UserInfoDto;
@@ -17,21 +17,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("${app.mapping.admin}")
+@RequestMapping("${app.mapping}/users")
 @PreAuthorize("hasRole('ADMIN')")
-public class UserControllerAdmin {
+public class UserController {
 
    private final UserService userService;
    private final EmployeeService employeeService;
    private final DtoMapper<UserInfoDto, UserEntity> mapper;
 
-   public UserControllerAdmin(UserService userService, EmployeeService employeeService, DtoMapper<UserInfoDto, UserEntity> mapper) {
+   public UserController(UserService userService, EmployeeService employeeService, DtoMapper<UserInfoDto, UserEntity> mapper) {
       this.userService = userService;
       this.employeeService = employeeService;
       this.mapper = mapper;
    }
 
-   @GetMapping("/users")
+   @GetMapping
    public ResponseEntity<List<UserInfoDto>> getUsers() {
       List<UserInfoDto> userDtoList = userService.getAll()
               .stream()
@@ -42,7 +42,7 @@ public class UserControllerAdmin {
               .body(userDtoList);
    }
 
-   @PostMapping("/addUser")
+   @PostMapping
    public ResponseEntity<UserInfoDto> addUser(@RequestBody UserEmpInputInfo userDto) {
       UserEntity userSaved = userService.save(
               UserEntity.builder()
@@ -66,7 +66,7 @@ public class UserControllerAdmin {
               .body(mapper.mapToDto(userSaved));
    }
 
-   @DeleteMapping("/dropUser/{id}")
+   @DeleteMapping("/{id}")
    public ResponseEntity<Void> dropUser(@PathVariable long id) {
       userService.deleteUserById(id);
       return ResponseEntity.noContent().build();
