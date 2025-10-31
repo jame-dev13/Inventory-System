@@ -3,7 +3,7 @@ package jame.dev.inventory.config;
 import jakarta.servlet.http.HttpServletResponse;
 import jame.dev.inventory.auth.filters.JwtAuthorizationFilter;
 import jame.dev.inventory.auth.in.LogoutService;
-import jame.dev.inventory.factories.CookieFactory;
+import jame.dev.inventory.factories.CookieTokenFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,15 +34,17 @@ public class WebConfig {
 
    private final JwtAuthorizationFilter filter;
    private final LogoutService logoutService;
-   private final CookieFactory cookieFactory;
+   private final CookieTokenFactory cookieFactory;
 
    @Value("${app.mapping.auth}")
    private String requestMatch;
-   public WebConfig(JwtAuthorizationFilter filter, LogoutService logoutService, CookieFactory cookieFactory) {
+
+   public WebConfig(JwtAuthorizationFilter filter, LogoutService logoutService, CookieTokenFactory cookieFactory) {
       this.filter = filter;
       this.logoutService = logoutService;
       this.cookieFactory = cookieFactory;
    }
+
 
    @Bean
    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -57,18 +59,18 @@ public class WebConfig {
               .sessionManagement(s ->
                       s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
               .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
-              .logout(logout -> {
-                 logout.logoutUrl("/v1/auth/logout")
-                         .addLogoutHandler((request, response, authentication) -> {
-                            String authHeader = request.getHeader("Authorization");
-                            cookieFactory.clearCookie();
-                            logoutService.logout(authHeader);
-                         })
-                         .logoutSuccessHandler((request, response, authentication) -> {
-                            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                            SecurityContextHolder.clearContext();
-                         });
-              })
+              .logout(logout ->
+                      logout.logoutUrl("/v1/auth/logout")
+                              .addLogoutHandler((request, response, authentication) -> {
+                                 String authHeader = request.getHeader("Authorization");
+                                 cookieFactory.clearAccessCookie();
+                                 cookieFactory.clearRefreshCookie();
+                                 logoutService.logout(authHeader);
+                              })
+                              .logoutSuccessHandler((request, response, authentication) -> {
+                                 response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                                 SecurityContextHolder.clearContext();
+                              }))
               .build();
    }
 

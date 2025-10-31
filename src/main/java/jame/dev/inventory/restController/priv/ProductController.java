@@ -65,15 +65,8 @@ public class ProductController {
       ProductEntity productEntity = productService.getProductById(id)
               .orElseThrow(() -> new ProductNotFoundException("Product not found."));
 
-      ProviderEntity providerEntity = providerService.getProviderById(productDto.providerId())
-              .orElseThrow(() -> new ProviderProductNotFoundException("Provider not found."));
+      ProductEntity productPatched = productService.update(productEntity, productDto);
 
-      productEntity.setDescription(productDto.description());
-      productEntity.setStock(productDto.stock());
-      productEntity.setProvider(providerEntity);
-      productEntity.setUnitPrice(productDto.unitPrice());
-
-      ProductEntity productPatched = productService.save(productEntity);
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
               .body(mapper.mapToDto(productPatched));

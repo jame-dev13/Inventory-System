@@ -85,11 +85,7 @@ public class ProviderController {
       ProviderEntity providerEntity = providerService.getProviderById(id)
               .orElseThrow(() -> new ProviderProductNotFoundException("Provider not found."));
 
-      providerEntity.setName(providerDto.name());
-      providerEntity.setPhone(providerDto.phone());
-      providerEntity.setEmail(providerDto.email());
-
-      ProviderEntity providerPatched = providerService.save(providerEntity);
+      ProviderEntity providerPatched = providerService.update(providerEntity, providerDto);
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
               .body(providerMapper.mapToDto(providerPatched));

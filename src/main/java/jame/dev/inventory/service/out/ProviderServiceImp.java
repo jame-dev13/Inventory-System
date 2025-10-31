@@ -1,5 +1,6 @@
 package jame.dev.inventory.service.out;
 
+import jame.dev.inventory.dtos.provider.in.ProviderInDto;
 import jame.dev.inventory.models.ProviderEntity;
 import jame.dev.inventory.repo.IProviderRepository;
 import jame.dev.inventory.service.in.ProviderService;
@@ -36,6 +37,15 @@ public class ProviderServiceImp implements ProviderService {
    @Override
    @Transactional
    public ProviderEntity save(ProviderEntity provider) {
+      return repo.save(provider);
+   }
+
+   @Override
+   @Transactional
+   public ProviderEntity update(ProviderEntity provider, ProviderInDto providerDto) {
+      provider.setName(providerDto.name());
+      provider.setPhone(providerDto.phone());
+      provider.setEmail(providerDto.email());
       return repo.save(provider);
    }
 

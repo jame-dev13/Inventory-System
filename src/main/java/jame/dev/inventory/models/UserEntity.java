@@ -47,7 +47,7 @@ public class UserEntity {
    @JoinTable(name = "user_roles",
            joinColumns = @JoinColumn(name = "id_user",
            foreignKey = @ForeignKey(name = "fk_user_users",
-                   foreignKeyDefinition = "FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE")),
+                   foreignKeyDefinition = "FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE")),
            inverseJoinColumns = @JoinColumn(name = "id_role"))
    private Set<RoleEntity> roles = new HashSet<>();
 }

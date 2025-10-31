@@ -25,16 +25,13 @@ public class SaleOrderMapper implements
 
    private final DtoMapper<ProductDto, ProductEntity> productMapper;
    private final DtoMapper<CustomerDto, CustomerEntity> customerMapper;
-   private final EntityMapper<ProductEntity, ProductDto> entityProductMapper;
    private final CustomerService customerService;
    private final ProductService productService;
 
-   public SaleOrderMapper(DtoMapper<ProductDto, ProductEntity> productMapper, DtoMapper<CustomerDto, CustomerEntity> customerMapper, EntityMapper<ProductEntity, ProductDto> entityProductMapper, CustomerService customerService, ProductService productService) {
+   public SaleOrderMapper(DtoMapper<ProductDto, ProductEntity> productMapper, DtoMapper<CustomerDto, CustomerEntity> customerMapper, CustomerService customerService, ProductService productService) {
       this.productMapper = productMapper;
       this.customerMapper = customerMapper;
-      this.entityProductMapper = entityProductMapper;
       this.customerService = customerService;
-
       this.productService = productService;
    }
 

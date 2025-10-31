@@ -31,7 +31,7 @@ public class ProductEntity {
    @Nonnull
    private BigDecimal unitPrice;
 
-   @ManyToOne
+   @ManyToOne(cascade = CascadeType.REFRESH, targetEntity = ProviderEntity.class)
    @JoinColumn(name = "id_provider",
            foreignKey =
            @ForeignKey(name = "fk_provider_prod",

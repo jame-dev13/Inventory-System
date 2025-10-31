@@ -63,13 +63,7 @@ public class CustomerController {
       CustomerEntity customer = customerService.getCustomerById(id)
               .orElseThrow(() -> new CustomerNotFoundException("Customer not found."));
 
-      customer.setName(customerDto.name());
-      customer.setLastName(customerDto.lastName());
-      customer.setEmail(customerDto.email());
-      customer.setPhone(customerDto.phone());
-      customer.setAge(customerDto.age());
-
-      CustomerEntity customerPatched = customerService.save(customer);
+      CustomerEntity customerPatched = customerService.update(customer, customerDto);
 
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)

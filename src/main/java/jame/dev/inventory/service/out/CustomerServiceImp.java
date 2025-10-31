@@ -1,5 +1,6 @@
 package jame.dev.inventory.service.out;
 
+import jame.dev.inventory.dtos.customer.in.CustomerDtoIn;
 import jame.dev.inventory.models.CustomerEntity;
 import jame.dev.inventory.repo.ICustomerRepository;
 import jame.dev.inventory.service.in.CustomerService;
@@ -29,6 +30,17 @@ public class CustomerServiceImp implements CustomerService {
    @Override
    @Transactional
    public CustomerEntity save(CustomerEntity customer) {
+      return repo.save(customer);
+   }
+
+   @Override
+   @Transactional
+   public CustomerEntity update(CustomerEntity customer, CustomerDtoIn customerDto) {
+      customer.setName(customerDto.name());
+      customer.setLastName(customerDto.lastName());
+      customer.setEmail(customerDto.email());
+      customer.setPhone(customerDto.phone());
+      customer.setAge(customerDto.age());
       return repo.save(customer);
    }
 

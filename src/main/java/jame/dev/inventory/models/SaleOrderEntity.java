@@ -22,13 +22,19 @@ public class SaleOrderEntity {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
-   @ManyToMany
+   @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.REMOVE},
+           targetEntity = ProductEntity.class)
    @JoinTable(name = "product_sell_orders",
-      joinColumns = @JoinColumn(name = "id_order"),
-      inverseJoinColumns = @JoinColumn(name = "id_product"))
+           joinColumns = @JoinColumn(name = "id_order"),
+           inverseJoinColumns = @JoinColumn(name = "id_product",
+                   foreignKey = @ForeignKey(name = "fk_order_product",
+                           foreignKeyDefinition = "FOREIGN KEY (id_product) REFERENCES products(id) ON DELETE CASCADE ON UPDATE CASCADE")))
    private List<ProductEntity> products = new ArrayList<>();
 
    @OneToOne
+   @JoinColumn(name = "id_customer",
+           foreignKey = @ForeignKey(name = "fk_order_customer",
+                   foreignKeyDefinition = "FOREIGN KEY (id_customer) REFERENCES customers (id) ON DELETE CASCADE ON UPDATE CASCADE"))
    @Nonnull
    private CustomerEntity customer;
 
