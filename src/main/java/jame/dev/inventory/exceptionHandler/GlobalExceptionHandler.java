@@ -1,6 +1,7 @@
 package jame.dev.inventory.exceptionHandler;
 
 import jame.dev.inventory.exceptions.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -68,7 +69,7 @@ public class GlobalExceptionHandler {
    public ResponseEntity<Map<String, String>> handleUsernameNotFoundException(NoSuchElementException ex){
       return ResponseEntity
               .status(HttpStatus.NOT_FOUND)
-              .body(Map.of("error", "Resource not found."));
+              .body(Map.of("error", "Resource not found: " + ex.getMessage()));
    }
 
    @ExceptionHandler(TokenReusedException.class)
@@ -108,16 +109,32 @@ public class GlobalExceptionHandler {
    public ResponseEntity<Map<String, String>> handleSaleOrderNotFoundException(SaleOrderNotFoundException ex){
       return ResponseEntity
               .status(HttpStatus.NOT_FOUND)
-              .body(Map.of("error", "Sale order not found."));
+              .body(Map.of("error", ex.getMessage()));
    }
 
    @ExceptionHandler(UserNotFoundException.class)
    public ResponseEntity<Map<String, String>> handleUserNotFoundException(UserNotFoundException ex){
       return ResponseEntity
               .status(HttpStatus.NOT_FOUND)
-              .body(Map.of("error", "User not found."));
+              .body(Map.of("error", ex.getMessage()));
    }
 
+   @ExceptionHandler(SaleNotFoundException.class)
+   public ResponseEntity<Map<String, String>> handleSaleNotFoundException(SaleNotFoundException ex){
+      return ResponseEntity
+              .status(HttpStatus.NOT_FOUND)
+              .body(Map.of("error", ex.getMessage()));
+   }
+
+   @ExceptionHandler(DataIntegrityViolationException.class)
+   public ResponseEntity<Map<String, String>> handleDataIntegrityViolationException(DataIntegrityViolationException ex){
+      return ResponseEntity
+              .status(HttpStatus.BAD_REQUEST)
+              .body(Map.of(
+                      "error", "constrain violation",
+                      "message", ex.getMostSpecificCause().getMessage()
+              ));
+   }
 
 //   @ExceptionHandler(Exception.class)
 //   public ResponseEntity<Map<String, String>> handleInternalServerError(Exception ex){

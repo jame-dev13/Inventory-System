@@ -2,6 +2,7 @@ package jame.dev.inventory.restController.priv;
 
 import jame.dev.inventory.dtos.sale.in.SaleDtoIn;
 import jame.dev.inventory.dtos.sale.out.SaleDto;
+import jame.dev.inventory.exceptions.SaleNotFoundException;
 import jame.dev.inventory.mapper.in.InputMapper;
 import jame.dev.inventory.mapper.in.OutputMapper;
 import jame.dev.inventory.models.SaleEntity;
@@ -39,6 +40,16 @@ public class SaleController {
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
               .body(saleDtoList);
+   }
+
+   @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
+   @GetMapping("/{id}")
+   public ResponseEntity<SaleDto> getSaleById(@PathVariable Long id) {
+      SaleEntity saleEntity = saleService.getSaleById(id)
+              .orElseThrow(() -> new SaleNotFoundException("Sale not found."));
+      return ResponseEntity.ok()
+              .contentType(MediaType.APPLICATION_JSON)
+              .body(saleMapper.toDto(saleEntity));
    }
 
    @PreAuthorize("hasRole('EMPLOYEE')")

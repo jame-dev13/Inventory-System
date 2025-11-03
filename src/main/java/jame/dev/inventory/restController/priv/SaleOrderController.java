@@ -41,6 +41,16 @@ public class SaleOrderController {
               .body(orderDtoList);
    }
 
+   @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
+   @GetMapping("/{id}")
+   public ResponseEntity<SaleOrderDto> getSaleOrderById(@PathVariable Long id) {
+      SaleOrderEntity orderEntity = saleOrderService.getSaleOrderById(id)
+              .orElseThrow(() -> new SaleOrderNotFoundException("Sale Order not found."));
+      return ResponseEntity.ok()
+              .contentType(MediaType.APPLICATION_JSON)
+              .body(saleOrderMapper.toDto(orderEntity));
+   }
+
    @PreAuthorize("hasRole('EMPLOYEE')")
    @PostMapping
    public ResponseEntity<SaleOrderDto> addOrder(@RequestBody SaleOrderInDto saleOrderInDto) {

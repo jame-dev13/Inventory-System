@@ -44,6 +44,15 @@ public class ProductController {
               .body(productsDtoList);
    }
 
+   @GetMapping("/{id}")
+   public ResponseEntity<ProductDto> getProductById(@PathVariable Long id){
+      ProductEntity productEntity = productService.getProductById(id)
+              .orElseThrow(() -> new ProductNotFoundException("Product not found."));
+      return ResponseEntity.ok()
+              .contentType(MediaType.APPLICATION_JSON)
+              .body(mapperOut.toDto(productEntity));
+   }
+
    @PostMapping
    public ResponseEntity<ProductDto> addProduct(@RequestBody @Nonnull ProductDtoIn productDto) {
       ProductEntity productEntity = productService.save(mapperIn.inputToEntity(productDto));

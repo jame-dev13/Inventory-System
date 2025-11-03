@@ -2,6 +2,7 @@ package jame.dev.inventory.restController.priv;
 
 import jame.dev.inventory.dtos.user.in.UserEmpInputInfo;
 import jame.dev.inventory.dtos.user.out.UserInfoDto;
+import jame.dev.inventory.exceptions.UserNotFoundException;
 import jame.dev.inventory.mapper.in.OutputMapper;
 import jame.dev.inventory.models.EmployeeEntity;
 import jame.dev.inventory.models.RoleEntity;
@@ -40,6 +41,15 @@ public class UserController {
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
               .body(userDtoList);
+   }
+
+   @GetMapping("/{id}")
+   public ResponseEntity<UserInfoDto> getUserById(@PathVariable Long id) {
+      UserEntity userEntity = userService.getUserById(id)
+              .orElseThrow(() -> new UserNotFoundException("User not found."));
+      return ResponseEntity.ok()
+              .contentType(MediaType.APPLICATION_JSON)
+              .body(mapper.toDto(userEntity));
    }
 
    @PostMapping

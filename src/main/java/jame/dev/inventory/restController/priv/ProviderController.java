@@ -17,7 +17,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 @RestController
 @RequestMapping("${app.mapping}/providers")
@@ -51,18 +50,25 @@ public class ProviderController {
    }
 
    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
-   @GetMapping("/{idProvider}/products")
-   public ResponseEntity<List<ProductDto>> getProductsByProvider(@PathVariable Long idProvider) {
-      Predicate<ProductEntity> filterById = p -> p.getProvider() != null && p.getProvider().getId().equals(idProvider);
-      List<ProductDto> filteredList = productService.getAll()
-              .stream()
-              .filter(filterById)
-              .map(productMapper::toDto)
-              .toList();
-
+   @GetMapping("/{id}")
+   public ResponseEntity<ProviderDto> getProvidersById(@PathVariable Long id) {
+      ProviderEntity provider = providerService.getProviderById(id)
+              .orElseThrow(() -> new ProviderProductNotFoundException("Provider not found."));
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
-              .body(filteredList);
+              .body(providerMapper.toDto(provider));
+   }
+
+   @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
+   @GetMapping("/{idProvider}/products")
+   public ResponseEntity<List<ProductDto>> getProductsByProvider(@PathVariable Long idProvider) {
+      List<ProductEntity> productEntityList = providerService.getProductsByProvider(idProvider);
+      List<ProductDto> productDtoList = productEntityList.stream()
+              .map(productMapper::toDto)
+              .toList();
+      return ResponseEntity.ok()
+              .contentType(MediaType.APPLICATION_JSON)
+              .body(productDtoList);
    }
 
    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")

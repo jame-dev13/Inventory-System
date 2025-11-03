@@ -44,6 +44,16 @@ public class CustomerController {
    }
 
    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
+   @GetMapping("/{id}")
+   public ResponseEntity<CustomerDto> getCustomerById(@PathVariable Long id){
+      CustomerEntity customer = customerService.getCustomerById(id)
+              .orElseThrow(() -> new CustomerNotFoundException("Customer not found."));
+      return ResponseEntity.ok()
+              .contentType(MediaType.APPLICATION_JSON)
+              .body(mapperOut.toDto(customer));
+   }
+
+   @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
    @PostMapping
    public ResponseEntity<CustomerDto> addCustomer(@RequestBody CustomerDtoIn customerDto){
       CustomerEntity customerSaved = customerService.save(mapperIn.inputToEntity(customerDto));

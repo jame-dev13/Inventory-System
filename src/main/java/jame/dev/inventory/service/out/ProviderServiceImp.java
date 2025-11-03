@@ -1,6 +1,7 @@
 package jame.dev.inventory.service.out;
 
 import jame.dev.inventory.dtos.provider.in.ProviderInDto;
+import jame.dev.inventory.models.ProductEntity;
 import jame.dev.inventory.models.ProviderEntity;
 import jame.dev.inventory.repo.IProviderRepository;
 import jame.dev.inventory.service.in.ProviderService;
@@ -22,6 +23,11 @@ public class ProviderServiceImp implements ProviderService {
    @Override
    public List<ProviderEntity> getAll() {
       return repo.findAll();
+   }
+
+   @Override
+   public List<ProductEntity> getProductsByProvider(Long id) {
+      return repo.getAllProductsByProviderId(id);
    }
 
    @Override
