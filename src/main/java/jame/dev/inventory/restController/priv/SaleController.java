@@ -2,8 +2,8 @@ package jame.dev.inventory.restController.priv;
 
 import jame.dev.inventory.dtos.sale.in.SaleDtoIn;
 import jame.dev.inventory.dtos.sale.out.SaleDto;
-import jame.dev.inventory.mapper.in.DtoMapper;
-import jame.dev.inventory.mapper.in.EntityMapper;
+import jame.dev.inventory.mapper.in.InputMapper;
+import jame.dev.inventory.mapper.in.OutputMapper;
 import jame.dev.inventory.models.SaleEntity;
 import jame.dev.inventory.service.in.SaleService;
 import org.springframework.http.MediaType;
@@ -18,10 +18,10 @@ import java.util.List;
 public class SaleController {
 
    private final SaleService saleService;
-   private final DtoMapper<SaleDto, SaleEntity> saleMapper;
-   private final EntityMapper<SaleEntity, SaleDtoIn> entitySaleMapper;
+   private final OutputMapper<SaleDto, SaleEntity> saleMapper;
+   private final InputMapper<SaleEntity, SaleDtoIn> entitySaleMapper;
 
-   public SaleController(SaleService saleService, DtoMapper<SaleDto, SaleEntity> saleMapper, EntityMapper<SaleEntity, SaleDtoIn> entitySaleMapper) {
+   public SaleController(SaleService saleService, OutputMapper<SaleDto, SaleEntity> saleMapper, InputMapper<SaleEntity, SaleDtoIn> entitySaleMapper) {
       this.saleService = saleService;
       this.saleMapper = saleMapper;
       this.entitySaleMapper = entitySaleMapper;
@@ -33,7 +33,7 @@ public class SaleController {
    public ResponseEntity<List<SaleDto>> getSales() {
       List<SaleDto> saleDtoList = saleService.getAll()
               .stream()
-              .map(saleMapper::mapToDto)
+              .map(saleMapper::toDto)
               .toList();
 
       return ResponseEntity.ok()
@@ -44,8 +44,8 @@ public class SaleController {
    @PreAuthorize("hasRole('EMPLOYEE')")
    @PostMapping
    public ResponseEntity<SaleDto> addSale(@RequestBody SaleDtoIn saleDtoIn){
-      SaleEntity saleEntity = saleService.save(entitySaleMapper.mapToEntity(saleDtoIn));
-      SaleDto saleDtoResponse = saleMapper.mapToDto(saleEntity);
+      SaleEntity saleEntity = saleService.save(entitySaleMapper.inputToEntity(saleDtoIn));
+      SaleDto saleDtoResponse = saleMapper.toDto(saleEntity);
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
               .body(saleDtoResponse);

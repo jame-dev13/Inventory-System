@@ -5,7 +5,8 @@ import jakarta.annotation.Nonnull;
 import jame.dev.inventory.dtos.customer.in.CustomerDtoIn;
 import jame.dev.inventory.dtos.customer.out.CustomerDto;
 import jame.dev.inventory.exceptions.CustomerNotFoundException;
-import jame.dev.inventory.mapper.in.DtoMapper;
+import jame.dev.inventory.mapper.in.InputMapper;
+import jame.dev.inventory.mapper.in.OutputMapper;
 import jame.dev.inventory.models.CustomerEntity;
 import jame.dev.inventory.service.in.CustomerService;
 import org.springframework.http.MediaType;
@@ -20,19 +21,22 @@ import java.util.List;
 public class CustomerController {
 
    private final CustomerService customerService;
-   private final DtoMapper<CustomerDto, CustomerEntity> mapper;
+   private final OutputMapper<CustomerDto, CustomerEntity> mapperOut;
+   private final InputMapper<CustomerEntity, CustomerDtoIn> mapperIn;
 
-   public CustomerController(CustomerService customerService, DtoMapper<CustomerDto, CustomerEntity> mapper) {
+   public CustomerController(CustomerService customerService, OutputMapper<CustomerDto, CustomerEntity> mapperOut, InputMapper<CustomerEntity, CustomerDtoIn> mapperIn) {
       this.customerService = customerService;
-      this.mapper = mapper;
+      this.mapperOut = mapperOut;
+      this.mapperIn = mapperIn;
    }
+
 
    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
    @GetMapping
    public ResponseEntity<List<CustomerDto>> getCustomers() {
       List<CustomerDto> customersDtoList = customerService.getAll()
               .stream()
-              .map(mapper::mapToDto)
+              .map(mapperOut::toDto)
               .toList();
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
@@ -42,19 +46,11 @@ public class CustomerController {
    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
    @PostMapping
    public ResponseEntity<CustomerDto> addCustomer(@RequestBody CustomerDtoIn customerDto){
-      CustomerEntity customerSaved = customerService.save(
-              CustomerEntity.builder()
-                      .name(customerDto.name())
-                      .lastName(customerDto.lastName())
-                      .email(customerDto.email())
-                      .phone(customerDto.phone())
-                      .age(customerDto.age())
-                      .build()
-      );
+      CustomerEntity customerSaved = customerService.save(mapperIn.inputToEntity(customerDto));
 
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
-              .body(mapper.mapToDto(customerSaved));
+              .body(mapperOut.toDto(customerSaved));
    }
 
    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
@@ -67,7 +63,7 @@ public class CustomerController {
 
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
-              .body(mapper.mapToDto(customerPatched));
+              .body(mapperOut.toDto(customerPatched));
    }
 
    @PreAuthorize("hasRole('ADMIN')")

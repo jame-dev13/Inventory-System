@@ -9,7 +9,7 @@ import java.util.List;
 
 @Builder
 @JsonDeserialize
-public record OrderSaleInDto(
+public record SaleOrderInDto(
         @JsonProperty("products") List<ProductDto> productList,
         @JsonProperty("customerId") Long customerId
         ) {

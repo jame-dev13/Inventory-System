@@ -111,6 +111,14 @@ public class GlobalExceptionHandler {
               .body(Map.of("error", "Sale order not found."));
    }
 
+   @ExceptionHandler(UserNotFoundException.class)
+   public ResponseEntity<Map<String, String>> handleUserNotFoundException(UserNotFoundException ex){
+      return ResponseEntity
+              .status(HttpStatus.NOT_FOUND)
+              .body(Map.of("error", "User not found."));
+   }
+
+
 //   @ExceptionHandler(Exception.class)
 //   public ResponseEntity<Map<String, String>> handleInternalServerError(Exception ex){
 //      return ResponseEntity

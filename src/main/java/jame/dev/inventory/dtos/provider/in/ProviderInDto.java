@@ -11,7 +11,7 @@ import java.math.BigInteger;
 @JsonDeserialize
 public record ProviderInDto (
         @JsonProperty("name") String name,
-        @JsonProperty("phone")BigInteger phone,
+        @JsonProperty("phone") BigInteger phone,
         @JsonProperty("email") @Email String email
         ){
 }

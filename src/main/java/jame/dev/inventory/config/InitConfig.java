@@ -3,7 +3,6 @@ package jame.dev.inventory.config;
 import jame.dev.inventory.models.EmployeeEntity;
 import jame.dev.inventory.models.RoleEntity;
 import jame.dev.inventory.models.UserEntity;
-import jame.dev.inventory.models.enums.EJobTitle;
 import jame.dev.inventory.models.enums.ERole;
 import jame.dev.inventory.models.enums.EShift;
 import jame.dev.inventory.service.in.EmployeeService;
@@ -33,7 +32,6 @@ public class InitConfig {
    CommandLineRunner init(UserService service, EmployeeService employeeService, PasswordEncoder encoder) {
       return args -> {
          UserEntity userEntity = UserEntity.builder()
-                 .id(null)
                  .name("admin")
                  .lastName("adm")
                  .email(emailAdmin)
@@ -49,7 +47,6 @@ public class InitConfig {
 
          EmployeeEntity employee = EmployeeEntity.builder()
                  .user(userEntity)
-                 .jobTitle(EJobTitle.ADMINISTRATION)
                  .salary(BigDecimal.valueOf(30_000.00))
                  .shift(EShift.MORNING)
                  .build();

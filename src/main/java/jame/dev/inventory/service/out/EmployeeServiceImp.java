@@ -19,7 +19,7 @@ public class EmployeeServiceImp implements EmployeeService {
 
    @Override
    public List<EmployeeEntity> getAll() {
-      return repo.findAll();
+      return repo.findAllActives();
    }
 
    @Override
@@ -36,6 +36,6 @@ public class EmployeeServiceImp implements EmployeeService {
    @Override
    @Transactional
    public void deleteEmployeeById(Long id) {
-      repo.deleteById(id);
+      repo.softDeleteById(id);
    }
 }

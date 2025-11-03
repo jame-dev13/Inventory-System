@@ -25,7 +25,7 @@ public class ProductServiceImp implements ProductService {
 
    @Override
    public List<ProductEntity> getAll() {
-      return repo.findAll();
+      return repo.findAllActives();
    }
 
    @Override
@@ -54,6 +54,6 @@ public class ProductServiceImp implements ProductService {
    @Override
    @Transactional
    public void deleteProductById(Long id) {
-      repo.deleteById(id);
+      repo.softDeleteById(id);
    }
 }

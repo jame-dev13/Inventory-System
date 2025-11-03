@@ -1,6 +1,7 @@
 package jame.dev.inventory.service.out;
 
 import jame.dev.inventory.models.SaleEntity;
+import jame.dev.inventory.models.SaleOrderEntity;
 import jame.dev.inventory.repo.ISaleRepository;
 import jame.dev.inventory.service.in.SaleService;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class SaleServiceImp implements SaleService {
 
    @Override
    public List<SaleEntity> getAll() {
-      return repo.findAll();
+      return repo.findAllActives();
    }
 
    @Override
@@ -36,8 +37,13 @@ public class SaleServiceImp implements SaleService {
    }
 
    @Override
+   public List<SaleOrderEntity> getOrdersById(Long id) {
+      return repo.getSaleOrders(id);
+   }
+
+   @Override
    @Transactional
    public void deleteSaleById(Long id) {
-      repo.deleteById(id);
+      repo.softDeleteById(id);
    }
 }

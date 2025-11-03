@@ -20,7 +20,7 @@ public class UserServiceImp implements UserService {
 
    @Override
    public List<UserEntity> getAll() {
-      return repo.findAll();
+      return repo.findAllActives();
    }
 
    @Override
@@ -42,6 +42,6 @@ public class UserServiceImp implements UserService {
    @Override
    @Transactional
    public void deleteUserById(Long id) {
-      repo.deleteById(id);
+      repo.softDeleteById(id);
    }
 }

@@ -2,6 +2,7 @@ package jame.dev.inventory.dtos.customer.in;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import jakarta.validation.constraints.Email;
 import lombok.Builder;
 
 import java.math.BigInteger;
@@ -11,7 +12,7 @@ import java.math.BigInteger;
 public record CustomerDtoIn(
         @JsonProperty("name") String name,
         @JsonProperty("lastName") String lastName,
-        @JsonProperty("email") String email,
+        @JsonProperty("email") @Email String email,
         @JsonProperty("phone") BigInteger phone,
         @JsonProperty("age") int age
 ) {

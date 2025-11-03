@@ -2,78 +2,72 @@ package jame.dev.inventory.mapper.out;
 
 import jame.dev.inventory.dtos.customer.out.CustomerDto;
 import jame.dev.inventory.dtos.product.out.ProductDto;
-import jame.dev.inventory.dtos.sale.in.OrderSaleInDto;
+import jame.dev.inventory.dtos.sale.in.SaleOrderInDto;
 import jame.dev.inventory.dtos.sale.out.SaleOrderDto;
 import jame.dev.inventory.exceptions.CustomerNotFoundException;
-import jame.dev.inventory.exceptions.ProductNotFoundException;
-import jame.dev.inventory.mapper.in.DtoMapper;
-import jame.dev.inventory.mapper.in.EntityMapper;
+import jame.dev.inventory.mapper.in.InputMapper;
+import jame.dev.inventory.mapper.in.OutputMapper;
 import jame.dev.inventory.models.CustomerEntity;
 import jame.dev.inventory.models.ProductEntity;
 import jame.dev.inventory.models.SaleOrderEntity;
 import jame.dev.inventory.service.in.CustomerService;
-import jame.dev.inventory.service.in.ProductService;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class SaleOrderMapper implements
-        DtoMapper<SaleOrderDto, SaleOrderEntity>,
-        EntityMapper<SaleOrderEntity, OrderSaleInDto> {
+        OutputMapper<SaleOrderDto, SaleOrderEntity>,
+        InputMapper<SaleOrderEntity, SaleOrderInDto> {
 
-   private final DtoMapper<ProductDto, ProductEntity> productMapper;
-   private final DtoMapper<CustomerDto, CustomerEntity> customerMapper;
+   private final OutputMapper<ProductDto, ProductEntity> productMapper;
+   private final OutputMapper<CustomerDto, CustomerEntity> customerMapper;
    private final CustomerService customerService;
-   private final ProductService productService;
 
-   public SaleOrderMapper(DtoMapper<ProductDto, ProductEntity> productMapper, DtoMapper<CustomerDto, CustomerEntity> customerMapper, CustomerService customerService, ProductService productService) {
+   public SaleOrderMapper(OutputMapper<ProductDto, ProductEntity> productMapper, OutputMapper<CustomerDto, CustomerEntity> customerMapper, CustomerService customerService) {
       this.productMapper = productMapper;
       this.customerMapper = customerMapper;
       this.customerService = customerService;
-      this.productService = productService;
+   }
+
+
+   @Override
+   public SaleOrderEntity inputToEntity(SaleOrderInDto dto) {
+      CustomerEntity customerEntity = customerService.getCustomerById(dto.customerId())
+              .orElseThrow(() -> new CustomerNotFoundException("Customer not found."));
+      return SaleOrderEntity.builder()
+              .products(getProductEntityList(dto.productList()))
+              .customer(customerEntity)
+              .active(true)
+              .build();
    }
 
    @Override
-   public SaleOrderDto mapToDto(SaleOrderEntity entity) {
+   public SaleOrderDto toDto(SaleOrderEntity entity) {
       return SaleOrderDto.builder()
               .id(entity.getId())
-              .customer(customerMapper.mapToDto(entity.getCustomer()))
               .products(entity.getProducts().stream()
-                      .map(productMapper::mapToDto)
+                      .map(productMapper::toDto)
                       .toList())
+              .customer(customerMapper.toDto(entity.getCustomer()))
               .orderCost(entity.getOrderCost())
               .build();
    }
 
    @Override
-   public SaleOrderEntity mapToEntity(OrderSaleInDto dto) {
-      return buildEntity(dto.productList(), dto.customerId());
-   }
-
-
-   private BigDecimal calculateTotal(List<ProductDto> productDtoList) {
-      return productDtoList.stream()
-              .map(ProductDto::unitPrice)
-              .reduce(BigDecimal.ZERO, BigDecimal::add);
-   }
-
-   private SaleOrderEntity buildEntity(List<ProductDto> products, Long id) {
-      CustomerEntity customerEntity = customerService.getCustomerById(id)
-              .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
-      BigDecimal total = calculateTotal(products);
+   public SaleOrderEntity toEntity(SaleOrderDto dto) {
       return SaleOrderEntity.builder()
-              .products(getProducts(products))
-              .customer(customerEntity)
-              .orderCost(total)
+              .id(dto.id())
+              .products(getProductEntityList(dto.products()))
+              .customer(customerMapper.toEntity(dto.customer()))
+              .active(true)
               .build();
    }
 
-   private List<ProductEntity> getProducts(List<ProductDto> productsDto) {
-      return productsDto.stream()
-              .map(p -> productService.getProductById(p.id())
-                      .orElseThrow(() -> new ProductNotFoundException("Product not found.")))
-              .toList();
+   private List<ProductEntity> getProductEntityList(List<ProductDto> listDto){
+      return listDto.stream()
+              .map(productMapper::toEntity)
+              .collect(Collectors.toList());
    }
 }

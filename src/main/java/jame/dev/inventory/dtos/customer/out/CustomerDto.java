@@ -10,7 +10,7 @@ import java.math.BigInteger;
 @Builder
 @JsonSerialize
 public record CustomerDto(
-        @JsonProperty("id") long id,
+        @JsonProperty("id") Long id,
         @JsonProperty("fullName") String name,
         @JsonProperty("email") @Email String email,
         @JsonProperty("phone") BigInteger phone,

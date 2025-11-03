@@ -4,12 +4,8 @@ package jame.dev.inventory.models;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jame.dev.inventory.models.enums.EJobTitle;
 import jame.dev.inventory.models.enums.EShift;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -30,15 +26,9 @@ public class EmployeeEntity {
    @JoinColumn(name = "user_id",
            foreignKey =
            @ForeignKey(name = "fk_user_id",
-                   foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE"))
+                   foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES users (id) ON UPDATE CASCADE"))
    @Nonnull
    private UserEntity user;
-
-   @Column(name = "job_title", unique = true, nullable = false)
-   @NotBlank
-   @Nonnull
-   @Enumerated(EnumType.STRING)
-   private EJobTitle jobTitle;
 
    @Column(name = "salary", nullable = false, precision = 10, scale = 2)
    private BigDecimal salary;
@@ -48,6 +38,14 @@ public class EmployeeEntity {
    @Nonnull
    @Enumerated(EnumType.STRING)
    private EShift shift;
+
+   @Column(name = "active", nullable = false)
+   @Setter(AccessLevel.NONE)
+   private boolean active = true;
+   @PrePersist
+   private void setActive(){
+      this.active = true;
+   }
 
    public String getFullName(){
       return this.user.getName() + this.user.getLastName();

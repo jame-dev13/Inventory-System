@@ -12,7 +12,7 @@ import java.math.BigInteger;
 @JsonSerialize
 @JsonDeserialize
 public record ProviderDto(
-        @JsonProperty("id") long id,
+        @JsonProperty("id") Long id,
         @JsonProperty("name") String name,
         @JsonProperty("phone") BigInteger phone,
         @JsonProperty("email") @Email String email

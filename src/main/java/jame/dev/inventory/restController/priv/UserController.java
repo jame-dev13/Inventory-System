@@ -2,7 +2,7 @@ package jame.dev.inventory.restController.priv;
 
 import jame.dev.inventory.dtos.user.in.UserEmpInputInfo;
 import jame.dev.inventory.dtos.user.out.UserInfoDto;
-import jame.dev.inventory.mapper.in.DtoMapper;
+import jame.dev.inventory.mapper.in.OutputMapper;
 import jame.dev.inventory.models.EmployeeEntity;
 import jame.dev.inventory.models.RoleEntity;
 import jame.dev.inventory.models.UserEntity;
@@ -23,9 +23,9 @@ public class UserController {
 
    private final UserService userService;
    private final EmployeeService employeeService;
-   private final DtoMapper<UserInfoDto, UserEntity> mapper;
+   private final OutputMapper<UserInfoDto, UserEntity> mapper;
 
-   public UserController(UserService userService, EmployeeService employeeService, DtoMapper<UserInfoDto, UserEntity> mapper) {
+   public UserController(UserService userService, EmployeeService employeeService, OutputMapper<UserInfoDto, UserEntity> mapper) {
       this.userService = userService;
       this.employeeService = employeeService;
       this.mapper = mapper;
@@ -35,7 +35,7 @@ public class UserController {
    public ResponseEntity<List<UserInfoDto>> getUsers() {
       List<UserInfoDto> userDtoList = userService.getAll()
               .stream()
-              .map(mapper::mapToDto)
+              .map(mapper::toDto)
               .toList();
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
@@ -56,14 +56,13 @@ public class UserController {
 
       employeeService.save(EmployeeEntity.builder()
                       .user(userSaved)
-                      .jobTitle(userDto.jobTitle())
                       .salary(userDto.salary())
                       .shift(userDto.shift())
                       .build());
 
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
-              .body(mapper.mapToDto(userSaved));
+              .body(mapper.toDto(userSaved));
    }
 
    @DeleteMapping("/{id}")

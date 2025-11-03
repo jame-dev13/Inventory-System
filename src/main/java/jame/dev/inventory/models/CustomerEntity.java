@@ -4,10 +4,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigInteger;
 
@@ -44,6 +41,14 @@ public class CustomerEntity {
    @Column(name = "age", nullable = false)
    @NotBlank
    private int age;
+
+   @Column(name = "active", nullable = false)
+   @Setter(AccessLevel.NONE)
+   private boolean active = true;
+   @PrePersist
+   private void setActive(){
+      this.active = true;
+   }
 
    public String getFullName(){
       return this.getName() + " " + this.getLastName();

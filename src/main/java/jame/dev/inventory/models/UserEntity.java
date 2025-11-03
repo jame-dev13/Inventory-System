@@ -4,10 +4,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -41,6 +38,14 @@ public class UserEntity {
    @NotBlank
    @Nonnull
    private String password;
+
+   @Column(name = "active", nullable = false)
+   @Setter(AccessLevel.NONE)
+   private boolean active = true;
+   @PrePersist
+   private void setActive(){
+      this.active = true;
+   }
 
    @OneToMany(fetch = FetchType.EAGER, targetEntity = RoleEntity.class,
            cascade = CascadeType.PERSIST, orphanRemoval = true)

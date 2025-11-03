@@ -19,7 +19,7 @@ public class CustomerServiceImp implements CustomerService {
 
    @Override
    public List<CustomerEntity> getAll() {
-      return repo.findAll();
+      return repo.findAllActives();
    }
 
    @Override
@@ -47,6 +47,6 @@ public class CustomerServiceImp implements CustomerService {
    @Override
    @Transactional
    public void deleteCustomerById(Long id) {
-      repo.deleteById(id);
+      repo.softDeleteById(id);
    }
 }
