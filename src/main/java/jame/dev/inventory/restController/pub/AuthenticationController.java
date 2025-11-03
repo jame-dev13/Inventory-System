@@ -1,6 +1,5 @@
 package jame.dev.inventory.restController.pub;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jame.dev.inventory.auth.in.AuthService;
 import jame.dev.inventory.dtos.auth.in.LoginRequest;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("${app.mapping.auth}")
 @AllArgsConstructor
 public class AuthenticationController {
-
    @Autowired
    private final AuthService authService;
    private final CookieTokenFactory cookieFactory;
@@ -29,29 +27,18 @@ public class AuthenticationController {
    public ResponseEntity<TokenResponse> signIn(@RequestBody LoginRequest request,
                                                HttpServletResponse response)
            throws AuthenticationException {
-      TokenResponse tokenResponse = authService.login(request);
-      Cookie cookie = cookieFactory.createAccessCookie(tokenResponse.access());
-      Cookie cookieRefresh = cookieFactory.createtRefreshCookie(tokenResponse.refresh());
-      response.addCookie(cookie);
-      response.addCookie(cookieRefresh);
+      TokenResponse tokenResponse = authService.login(request, response);
       return ResponseEntity.ok()
-              .header("Authorization", "Bearer " + tokenResponse.access())
               .contentType(MediaType.APPLICATION_JSON)
               .body(tokenResponse);
    }
 
    @PostMapping("/refresh")
-   public ResponseEntity<TokenResponse> refreshToken(@RequestHeader("X-Refresh-Token") final String token,
+   public ResponseEntity<TokenResponse> refreshToken(@CookieValue(value = "_HOST-JWT_REFRESH") final String token,
                                                      HttpServletResponse response)
            throws RefreshTokenException {
-      TokenResponse tokenResponse = authService.refresh(token);
-      tokenService.blacklistToken(token.substring(7));
-      Cookie cookie = cookieFactory.createAccessCookie(tokenResponse.access());
-      Cookie cookieRefresh = cookieFactory.createtRefreshCookie(tokenResponse.refresh());
-      response.addCookie(cookie);
-      response.addCookie(cookieRefresh);
+      TokenResponse tokenResponse = authService.refresh(token, response);
       return ResponseEntity.ok()
-              .header("Authorization", "Bearer " + tokenResponse.access())
               .contentType(MediaType.APPLICATION_JSON)
               .body(tokenResponse);
    }

@@ -1,6 +1,0 @@
-package jame.dev.inventory.models.enums;
-
-public enum EJobTitle {
-   MARKETING, SALES, SHOPPING, ADMINISTRATION, COUNTER, QA, DEVELOPER, SOFTWARE_ENGINEER,
-   TI, SUPPORT, NETWORK, BUSINESS
-}

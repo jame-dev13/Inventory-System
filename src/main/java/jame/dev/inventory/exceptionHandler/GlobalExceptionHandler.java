@@ -136,6 +136,20 @@ public class GlobalExceptionHandler {
               ));
    }
 
+   @ExceptionHandler(TokenExpiredException.class)
+   public ResponseEntity<Map<String, String>> handleTokenExpiredException(TokenExpiredException ex){
+      return ResponseEntity
+              .status(HttpStatus.UNAUTHORIZED)
+              .body(Map.of("error", ex.getMessage()));
+   }
+
+   @ExceptionHandler(ClaimsNullException.class)
+   public ResponseEntity<Map<String, String>> handleClaimsNullException(ClaimsNullException ex){
+      return ResponseEntity
+              .status(HttpStatus.NO_CONTENT)
+              .body(Map.of("error", ex.getMessage()));
+   }
+
 //   @ExceptionHandler(Exception.class)
 //   public ResponseEntity<Map<String, String>> handleInternalServerError(Exception ex){
 //      return ResponseEntity
