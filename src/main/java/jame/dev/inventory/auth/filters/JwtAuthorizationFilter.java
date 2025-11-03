@@ -5,14 +5,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jame.dev.inventory.exceptions.TokenExpiredException;
 import jame.dev.inventory.exceptions.ClaimsNullException;
-import jame.dev.inventory.exceptions.TokenReusedException;
 import jame.dev.inventory.jwt.in.JwtService;
 import jame.dev.inventory.models.enums.ECookieName;
 import jame.dev.inventory.service.in.TokenService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,7 +33,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
    private final TokenService blacklist;
 
    @Override
-   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+   protected void doFilterInternal(HttpServletRequest request,
+                                   HttpServletResponse response,
+                                   FilterChain filterChain)
            throws ServletException, IOException {
       Cookie[] cookies = request.getCookies();
 
@@ -47,11 +48,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
       String jwtAccess = cookieValues.get(NameValueJwt.ACCESS.getName());
 
       if(jwtAccess == null){
-         throw new TokenExpiredException("Access token expired.");
+         sendMessageError(response, "Token expired.");
+         return;
       }
 
       if(blackListHelper(jwtAccess)){
-         throw new TokenReusedException("Token is revoked.");
+         sendMessageError(response, "Token is revoked.");
+         return;
       }
 
       //token access valid.
@@ -64,11 +67,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
       String refreshToken = cookieValues.get(NameValueJwt.REFRESH.getName());
       if(refreshToken == null){
-         throw new TokenExpiredException("Refresh token expired");
+         sendMessageError(response,"Refresh token expired");
+         return;
       }
 
       if(blackListHelper(refreshToken)){
-         throw new TokenReusedException("Token revoked.");
+         sendMessageError(response, "Token revoked.");
+         return;
       }
 
       if(isValidTokenHelper(refreshToken)){
@@ -81,7 +86,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
    }
 
-   private void authorizationHelper(String username) {
+   private  void sendMessageError(final HttpServletResponse response, final String msg) throws IOException {
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+      final String errorMsg = """
+              {"error": "%s"}
+              """.formatted(msg);
+      response.getWriter().write(errorMsg);
+      response.getWriter().flush();
+   }
+
+   private void authorizationHelper(final String username) {
       UserDetails user = userDetailsService.loadUserByUsername(username);
       if(SecurityContextHolder.getContext().getAuthentication() == null) {
          UsernamePasswordAuthenticationToken authenticationToken =
@@ -90,7 +105,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
       }
    }
 
-   private Map<String, String> getTokenFromCookie(Cookie[] cookies){
+   private Map<String, String> getTokenFromCookie(final Cookie[] cookies){
       Map<String, String> values = new HashMap<>();
       for (Cookie cookie : cookies) {
          if(cookie.getName().equals(ECookieName.JWT_ACCESS.getName())){
@@ -102,13 +117,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
       return values;
    }
 
-   private boolean isValidTokenHelper(String token){
+   private boolean isValidTokenHelper(final String token){
       String username = Optional.ofNullable(jwtService.extractUsername(token))
               .orElseThrow(() -> new ClaimsNullException("Claims are null, cannot extract, token invalid."));
       return jwtService.isTokenValid(token, username);
    }
 
-   private boolean blackListHelper(String token){
+   private boolean blackListHelper(final String token){
       return blacklist.contains(token);
    }
 
