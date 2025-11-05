@@ -1,6 +1,7 @@
 package jame.dev.inventory.restController.priv;
 
 import jakarta.annotation.Nonnull;
+import jame.dev.inventory.cache.in.Cache;
 import jame.dev.inventory.dtos.product.out.ProductDto;
 import jame.dev.inventory.dtos.provider.in.ProviderInDto;
 import jame.dev.inventory.dtos.provider.out.ProviderDto;
@@ -9,7 +10,6 @@ import jame.dev.inventory.mapper.in.InputMapper;
 import jame.dev.inventory.mapper.in.OutputMapper;
 import jame.dev.inventory.models.ProductEntity;
 import jame.dev.inventory.models.ProviderEntity;
-import jame.dev.inventory.service.in.ProductService;
 import jame.dev.inventory.service.in.ProviderService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,33 +17,43 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+
+import static jame.dev.inventory.cache.CacheKeys.PROVIDERS;
 
 @RestController
 @RequestMapping("${app.mapping}/providers")
 public class ProviderController {
 
    private final ProviderService providerService;
-   private final ProductService productService;
    private final OutputMapper<ProviderDto, ProviderEntity> providerMapper;
    private final OutputMapper<ProductDto, ProductEntity> productMapper;
    private final InputMapper<ProviderEntity, ProviderInDto> providerInMapper;
+   private final Cache<ProviderDto> cache;
 
-   public ProviderController(ProviderService providerService, ProductService productService, OutputMapper<ProviderDto, ProviderEntity> providerMapper, OutputMapper<ProductDto, ProductEntity> productMapper, InputMapper<ProviderEntity, ProviderInDto> providerInMapper) {
+   public ProviderController(ProviderService providerService, OutputMapper<ProviderDto, ProviderEntity> providerMapper, OutputMapper<ProductDto, ProductEntity> productMapper, InputMapper<ProviderEntity, ProviderInDto> providerInMapper, Cache<ProviderDto> cache) {
       this.providerService = providerService;
-      this.productService = productService;
       this.providerMapper = providerMapper;
       this.productMapper = productMapper;
       this.providerInMapper = providerInMapper;
+      this.cache = cache;
    }
 
 
    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
    @GetMapping
    public ResponseEntity<List<ProviderDto>> getProviders() {
+      Optional<List<ProviderDto>> optionalList = cache.getCache(PROVIDERS.getName());
+      if(optionalList.isPresent()){
+         return ResponseEntity.ok()
+                 .contentType(MediaType.APPLICATION_JSON)
+                 .body(optionalList.get());
+      }
       List<ProviderDto> providerDtoList = providerService.getAll()
               .stream()
               .map(providerMapper::toDto)
               .toList();
+      cache.saveCache(PROVIDERS.getName(), providerDtoList);
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
               .body(providerDtoList);
@@ -75,9 +85,11 @@ public class ProviderController {
    @PostMapping
    public ResponseEntity<ProviderDto> addProvider(@RequestBody ProviderInDto providerDto) {
       ProviderEntity provider = providerService.save(providerInMapper.inputToEntity(providerDto));
+      ProviderDto dtoResponse = providerMapper.toDto(provider);
+      cache.addData(PROVIDERS.getName(), dtoResponse);
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
-              .body(providerMapper.toDto(provider));
+              .body(dtoResponse);
    }
 
    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
@@ -86,14 +98,20 @@ public class ProviderController {
       ProviderEntity providerEntity = providerService.getProviderById(id)
               .orElseThrow(() -> new ProviderProductNotFoundException("Provider not found."));
       ProviderEntity providerPatched = providerService.update(providerEntity, providerDto);
+      ProviderDto dtoResponse = providerMapper.toDto(providerPatched);
+      cache.updateData(PROVIDERS.getName(), p -> p.id().equals(id), dtoResponse);
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
-              .body(providerMapper.toDto(providerPatched));
+              .body(dtoResponse);
    }
 
    @PreAuthorize("hasRole('ADMIN')")
    @DeleteMapping("/{id}")
    public ResponseEntity<Void> dropProvider(@PathVariable @Nonnull Long id) {
+      ProviderEntity providerEntity = providerService.getProviderById(id)
+                      .orElseThrow(() -> new ProviderProductNotFoundException("Provider not found."));
+      ProviderDto providerDto = providerMapper.toDto(providerEntity);
+      cache.removeData(PROVIDERS.getName(), p -> p.id().equals(id), providerDto);
       providerService.deleteProviderById(id);
       return ResponseEntity.noContent().build();
    }

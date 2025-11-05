@@ -1,5 +1,6 @@
 package jame.dev.inventory.exceptionHandler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jame.dev.inventory.exceptions.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -147,6 +148,13 @@ public class GlobalExceptionHandler {
    public ResponseEntity<Map<String, String>> handleClaimsNullException(ClaimsNullException ex){
       return ResponseEntity
               .status(HttpStatus.NO_CONTENT)
+              .body(Map.of("error", ex.getMessage()));
+   }
+
+   @ExceptionHandler(JsonProcessingException.class)
+   public ResponseEntity<Map<String, String>> handleJsonProcessingException(JsonProcessingException ex){
+      return ResponseEntity
+              .status(HttpStatus.INTERNAL_SERVER_ERROR)
               .body(Map.of("error", ex.getMessage()));
    }
 

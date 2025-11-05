@@ -55,8 +55,8 @@ public class WebConfig {
                       r.requestMatchers("%s/**".formatted(requestMatch))
                               .permitAll()
                               .anyRequest()
-                              .authenticated())
-              .sessionManagement(s ->
+                              .authenticated()
+              ).sessionManagement(s ->
                       s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
               .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
               .logout(logout ->

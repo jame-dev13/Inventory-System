@@ -1,6 +1,7 @@
 package jame.dev.inventory.dtos.customer.out;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.validation.constraints.Email;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import java.math.BigInteger;
 
 @Builder
 @JsonSerialize
+@JsonDeserialize
 public record CustomerDto(
         @JsonProperty("id") Long id,
         @JsonProperty("fullName") String name,
