@@ -9,8 +9,8 @@ import jame.dev.inventory.exceptions.ClaimsNullException;
 import jame.dev.inventory.jwt.in.JwtService;
 import jame.dev.inventory.models.enums.ECookieName;
 import jame.dev.inventory.service.in.TokenService;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,18 +25,31 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
-@AllArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
    private final JwtService jwtService;
    private final UserDetailsService userDetailsService;
    private final TokenService blacklist;
 
+   @Value("${app.mapping.auth}/refresh")
+   private String pathAuth;
+
+   public JwtAuthorizationFilter(JwtService jwtService, UserDetailsService userDetailsService, TokenService blacklist) {
+      this.jwtService = jwtService;
+      this.userDetailsService = userDetailsService;
+      this.blacklist = blacklist;
+   }
+
    @Override
    protected void doFilterInternal(HttpServletRequest request,
                                    HttpServletResponse response,
                                    FilterChain filterChain)
            throws ServletException, IOException {
+
+      if(request.getRequestURI().equals(pathAuth)){
+         filterChain.doFilter(request, response);
+         return;
+      }
       Cookie[] cookies = request.getCookies();
 
       if(cookies == null){
