@@ -26,6 +26,7 @@ public class EmployeeMapper implements OutputMapper<EmployeeDto, EmployeeEntity>
               .user(userEntity)
               .salary(dto.salary())
               .shift(dto.shift())
+              .active(true)
               .build();
    }
 
@@ -47,6 +48,7 @@ public class EmployeeMapper implements OutputMapper<EmployeeDto, EmployeeEntity>
               .user(userEntity)
               .salary(dto.salary())
               .shift(dto.shift())
+              .active(true)
               .build();
    }
 
