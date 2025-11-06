@@ -12,6 +12,6 @@ import java.math.BigDecimal;
 public record EmployeeDtoIn(
         @JsonProperty("idUser") Long idUser,
         @JsonProperty("salary") BigDecimal salary,
-        @JsonProperty("shift")EShift shift
+        @JsonProperty("shift") EShift shift
         ) {
 }

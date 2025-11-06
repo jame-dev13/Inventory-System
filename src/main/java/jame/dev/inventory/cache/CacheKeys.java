@@ -9,7 +9,9 @@ public enum CacheKeys {
    PRODUCTS("products:list"),
    PROVIDERS("providers:list"),
    SALE_ORDERS("sale:orders:list"),
-   SALES("sales:list");
+   SALES("sales:list"),
+   USERS("users:list"),
+   EMPLOYEES("employees:list");
 
    private final String name;
    CacheKeys(String name){

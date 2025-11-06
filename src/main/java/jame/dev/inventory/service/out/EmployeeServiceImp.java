@@ -1,5 +1,7 @@
 package jame.dev.inventory.service.out;
 
+import jame.dev.inventory.dtos.employee.in.EmployeeDtoIn;
+import jame.dev.inventory.exceptions.EmployeeNotFoundException;
 import jame.dev.inventory.models.EmployeeEntity;
 import jame.dev.inventory.repo.IEmployeeRepository;
 import jame.dev.inventory.service.in.EmployeeService;
@@ -31,6 +33,16 @@ public class EmployeeServiceImp implements EmployeeService {
    @Transactional
    public EmployeeEntity save(EmployeeEntity employee) {
       return repo.save(employee);
+   }
+
+   @Override
+   @Transactional
+   public EmployeeEntity update(Long id, EmployeeDtoIn employeeDtoIn) {
+      EmployeeEntity employeeEntity = repo.findById(id)
+              .orElseThrow(() -> new EmployeeNotFoundException("Employee not found."));
+      employeeEntity.setSalary(employeeDtoIn.salary());
+      employeeEntity.setShift(employeeDtoIn.shift());
+      return repo.save(employeeEntity);
    }
 
    @Override
