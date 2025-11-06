@@ -34,6 +34,7 @@ public class UserMapper implements OutputMapper<UserDto, UserEntity>, InputMappe
               .id(entity.getId())
               .name(entity.getName())
               .lastName(entity.getLastName())
+              .password(entity.getPassword())
               .email(entity.getEmail())
               .role(mapRolesInverse(entity.getRoles()))
               .build();
@@ -54,7 +55,7 @@ public class UserMapper implements OutputMapper<UserDto, UserEntity>, InputMappe
 
    private Set<RoleEntity> mapRoles(Set<ERole> roles){
       return roles.stream()
-              .map(r -> new RoleEntity(null, r))
+              .map(r -> RoleEntity.builder().role(r).build())
               .collect(Collectors.toSet());
    }
 

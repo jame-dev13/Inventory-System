@@ -42,13 +42,8 @@ public class UserEntity {
    @Column(name = "active", nullable = false)
    @Setter(AccessLevel.NONE)
    private boolean active = true;
-   @PrePersist
-   private void setActive(){
-      this.active = true;
-   }
 
-   @OneToMany(fetch = FetchType.EAGER, targetEntity = RoleEntity.class,
-           cascade = CascadeType.PERSIST, orphanRemoval = true)
+   @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
    @JoinTable(name = "user_roles",
            joinColumns = @JoinColumn(name = "id_user",
            foreignKey = @ForeignKey(name = "fk_user_users",

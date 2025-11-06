@@ -37,6 +37,7 @@ public class InitConfig {
                  .email(emailAdmin)
                  .password(encoder.encode(pwdAdmin))
                  .roles(Set.of(new RoleEntity(null, ERole.ADMIN), new RoleEntity(null, ERole.EMPLOYEE)))
+                 .active(true)
                  .build();
          UserEntity userPresent = service.getUserByEmail(userEntity.getEmail())
                  .orElse(null);
@@ -49,6 +50,7 @@ public class InitConfig {
                  .user(userEntity)
                  .salary(BigDecimal.valueOf(30_000.00))
                  .shift(EShift.MORNING)
+                 .active(true)
                  .build();
          employeeService.save(employee);
          log.info("User admin and Employee saved.");

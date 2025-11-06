@@ -20,7 +20,7 @@ import static jame.dev.inventory.cache.CacheKeys.EMPLOYEES;
 
 @RestController
 @RequestMapping("${app.mapping}/employees")
-@PreAuthorize("hasAnyRole('ADMIN, 'EMPLOYEE')")
+@PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
 public class EmployeeController {
    private final EmployeeService employeeService;
    private final OutputMapper<EmployeeDto, EmployeeEntity> mapperOut;

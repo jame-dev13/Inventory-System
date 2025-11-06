@@ -66,7 +66,7 @@ public class UserServiceImp implements UserService {
 
    private Set<RoleEntity> mapRoles(Set<ERole> roles){
       return roles.stream()
-              .map(r -> new RoleEntity(null, r))
+              .map(r -> RoleEntity.builder().role(r).build())
               .collect(Collectors.toSet());
    }
 }

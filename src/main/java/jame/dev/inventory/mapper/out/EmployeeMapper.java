@@ -34,6 +34,7 @@ public class EmployeeMapper implements OutputMapper<EmployeeDto, EmployeeEntity>
    public EmployeeDto toDto(EmployeeEntity entity) {
       return EmployeeDto.builder()
               .id(entity.getId() != null ? entity.getId(): null)
+              .idUser(entity.getUser().getId())
               .name(entity.getFullName())
               .salary(entity.getSalary())
               .shift(entity.getShift())
@@ -42,7 +43,7 @@ public class EmployeeMapper implements OutputMapper<EmployeeDto, EmployeeEntity>
 
    @Override
    public EmployeeEntity toEntity(EmployeeDto dto) {
-      UserEntity userEntity = getUser(dto.id());
+      UserEntity userEntity = getUser(dto.idUser());
       return EmployeeEntity.builder()
               .id(dto.id())
               .user(userEntity)

@@ -48,6 +48,6 @@ public class EmployeeEntity {
    }
 
    public String getFullName(){
-      return this.user.getName() + this.user.getLastName();
+      return "%s %s".formatted(this.getUser().getName(), this.getUser().getLastName());
    }
 }
