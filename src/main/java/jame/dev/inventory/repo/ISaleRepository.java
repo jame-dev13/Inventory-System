@@ -1,7 +1,7 @@
 package jame.dev.inventory.repo;
 
-import jame.dev.inventory.models.SaleEntity;
-import jame.dev.inventory.models.SaleOrderEntity;
+import jame.dev.inventory.models.dao.SaleEntity;
+import jame.dev.inventory.models.dao.SaleOrderEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 

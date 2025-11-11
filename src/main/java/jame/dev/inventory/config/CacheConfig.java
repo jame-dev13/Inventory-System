@@ -3,6 +3,7 @@ package jame.dev.inventory.config;
 import jame.dev.inventory.cache.in.Cache;
 import jame.dev.inventory.cache.out.CacheImp;
 import jame.dev.inventory.dtos.customer.out.CustomerDto;
+import jame.dev.inventory.dtos.date.SaleDateDto;
 import jame.dev.inventory.dtos.employee.out.EmployeeDto;
 import jame.dev.inventory.dtos.product.out.ProductDto;
 import jame.dev.inventory.dtos.provider.out.ProviderDto;
@@ -55,6 +56,10 @@ public class CacheConfig {
    @Bean
    public Cache<UserDto> userDtoCache() {
       return new CacheImp<>(jedis, UserDto.class);
+   }
+   @Bean
+   Cache<SaleDateDto> saleDateDtoCache(){
+      return new CacheImp<>(jedis, SaleDateDto.class);
    }
 
 }

@@ -6,7 +6,7 @@ import jame.dev.inventory.dtos.sale.out.SaleOrderDto;
 import jame.dev.inventory.exceptions.SaleOrderNotFoundException;
 import jame.dev.inventory.mapper.in.InputMapper;
 import jame.dev.inventory.mapper.in.OutputMapper;
-import jame.dev.inventory.models.SaleOrderEntity;
+import jame.dev.inventory.models.dao.SaleOrderEntity;
 import jame.dev.inventory.service.in.SaleOrderService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

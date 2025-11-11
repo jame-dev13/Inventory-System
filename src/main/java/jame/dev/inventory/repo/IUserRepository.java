@@ -1,6 +1,6 @@
 package jame.dev.inventory.repo;
 
-import jame.dev.inventory.models.UserEntity;
+import jame.dev.inventory.models.dao.UserEntity;
 
 import java.util.Optional;
 

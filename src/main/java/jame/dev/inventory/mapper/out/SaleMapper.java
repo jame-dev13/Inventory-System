@@ -1,5 +1,6 @@
 package jame.dev.inventory.mapper.out;
 
+import jame.dev.inventory.annotations.Mapper;
 import jame.dev.inventory.dtos.employee.out.EmployeeDto;
 import jame.dev.inventory.dtos.sale.in.SaleDtoIn;
 import jame.dev.inventory.dtos.sale.out.SaleDto;
@@ -8,18 +9,17 @@ import jame.dev.inventory.exceptions.EmployeeNotFoundException;
 import jame.dev.inventory.exceptions.SaleOrderNotFoundException;
 import jame.dev.inventory.mapper.in.InputMapper;
 import jame.dev.inventory.mapper.in.OutputMapper;
-import jame.dev.inventory.models.EmployeeEntity;
-import jame.dev.inventory.models.SaleEntity;
-import jame.dev.inventory.models.SaleOrderEntity;
+import jame.dev.inventory.models.dao.EmployeeEntity;
+import jame.dev.inventory.models.dao.SaleEntity;
+import jame.dev.inventory.models.dao.SaleOrderEntity;
 import jame.dev.inventory.service.in.EmployeeService;
 import jame.dev.inventory.service.in.SaleOrderService;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+@Mapper
 public class SaleMapper implements
         OutputMapper<SaleDto, SaleEntity>,
         InputMapper<SaleEntity, SaleDtoIn> {

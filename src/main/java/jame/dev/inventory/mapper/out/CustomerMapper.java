@@ -1,13 +1,13 @@
 package jame.dev.inventory.mapper.out;
 
+import jame.dev.inventory.annotations.Mapper;
 import jame.dev.inventory.dtos.customer.in.CustomerDtoIn;
 import jame.dev.inventory.dtos.customer.out.CustomerDto;
 import jame.dev.inventory.mapper.in.InputMapper;
 import jame.dev.inventory.mapper.in.OutputMapper;
-import jame.dev.inventory.models.CustomerEntity;
-import org.springframework.stereotype.Component;
+import jame.dev.inventory.models.dao.CustomerEntity;
 
-@Component
+@Mapper
 public class CustomerMapper implements OutputMapper<CustomerDto, CustomerEntity>,
         InputMapper<CustomerEntity, CustomerDtoIn> {
 

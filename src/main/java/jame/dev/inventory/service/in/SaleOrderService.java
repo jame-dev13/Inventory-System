@@ -1,7 +1,7 @@
 package jame.dev.inventory.service.in;
 
 import jame.dev.inventory.dtos.sale.in.SaleOrderInDto;
-import jame.dev.inventory.models.SaleOrderEntity;
+import jame.dev.inventory.models.dao.SaleOrderEntity;
 
 import java.util.List;
 import java.util.Optional;

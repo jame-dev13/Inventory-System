@@ -1,16 +1,16 @@
 package jame.dev.inventory.mapper.out;
 
+import jame.dev.inventory.annotations.Mapper;
 import jame.dev.inventory.dtos.employee.in.EmployeeDtoIn;
 import jame.dev.inventory.dtos.employee.out.EmployeeDto;
 import jame.dev.inventory.exceptions.UserNotFoundException;
 import jame.dev.inventory.mapper.in.InputMapper;
 import jame.dev.inventory.mapper.in.OutputMapper;
-import jame.dev.inventory.models.EmployeeEntity;
-import jame.dev.inventory.models.UserEntity;
+import jame.dev.inventory.models.dao.EmployeeEntity;
+import jame.dev.inventory.models.dao.UserEntity;
 import jame.dev.inventory.service.in.UserService;
-import org.springframework.stereotype.Component;
 
-@Component
+@Mapper
 public class EmployeeMapper implements OutputMapper<EmployeeDto, EmployeeEntity>, InputMapper<EmployeeEntity, EmployeeDtoIn> {
 
    private final UserService userService;

@@ -6,13 +6,16 @@ import jame.dev.inventory.dtos.sale.out.SaleDto;
 import jame.dev.inventory.exceptions.SaleNotFoundException;
 import jame.dev.inventory.mapper.in.InputMapper;
 import jame.dev.inventory.mapper.in.OutputMapper;
-import jame.dev.inventory.models.SaleEntity;
+import jame.dev.inventory.models.dao.SaleDateEntity;
+import jame.dev.inventory.models.dao.SaleEntity;
+import jame.dev.inventory.service.in.SaleDateService;
 import jame.dev.inventory.service.in.SaleService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,12 +26,14 @@ import static jame.dev.inventory.cache.CacheKeys.SALES;
 public class SaleController {
 
    private final SaleService saleService;
+   private final SaleDateService saleDateService;
    private final OutputMapper<SaleDto, SaleEntity> saleMapper;
    private final InputMapper<SaleEntity, SaleDtoIn> entitySaleMapper;
    private final Cache<SaleDto> cache;
 
-   public SaleController(SaleService saleService, OutputMapper<SaleDto, SaleEntity> saleMapper, InputMapper<SaleEntity, SaleDtoIn> entitySaleMapper, Cache<SaleDto> cache) {
+   public SaleController(SaleService saleService, SaleDateService saleDateService, OutputMapper<SaleDto, SaleEntity> saleMapper, InputMapper<SaleEntity, SaleDtoIn> entitySaleMapper, Cache<SaleDto> cache) {
       this.saleService = saleService;
+      this.saleDateService = saleDateService;
       this.saleMapper = saleMapper;
       this.entitySaleMapper = entitySaleMapper;
       this.cache = cache;
@@ -54,6 +59,7 @@ public class SaleController {
               .body(saleDtoList);
    }
 
+
    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
    @GetMapping("/{id}")
    public ResponseEntity<SaleDto> getSaleById(@PathVariable Long id) {
@@ -68,6 +74,7 @@ public class SaleController {
    @PostMapping
    public ResponseEntity<SaleDto> addSale(@RequestBody SaleDtoIn saleDtoIn) {
       SaleEntity saleEntity = saleService.save(entitySaleMapper.inputToEntity(saleDtoIn));
+      saveDateSale(saleEntity);
       SaleDto saleDtoResponse = saleMapper.toDto(saleEntity);
       cache.addData(SALES.getName(), saleDtoResponse);
       return ResponseEntity.ok()
@@ -84,5 +91,16 @@ public class SaleController {
       cache.removeData(SALES.getName(), p -> p.id().equals(id), saleDto);
       saleService.deleteSaleById(id);
       return ResponseEntity.noContent().build();
+   }
+
+   private void saveDateSale(SaleEntity saleEntity) {
+      SaleDateEntity saleDate = saleDateService.getSaleDateById(saleEntity.getSaleDate())
+              .orElse(SaleDateEntity.builder()
+                      .saleDate(saleEntity.getSaleDate())
+                      .sales(new ArrayList<>())
+                      .build());
+
+      saleDate.getSales().add(saleEntity);
+      saleDateService.save(saleDate);
    }
 }

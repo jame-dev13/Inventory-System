@@ -2,6 +2,7 @@ package jame.dev.inventory.cache.out;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jame.dev.inventory.cache.in.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,8 @@ public class CacheImp<T> implements Cache<T> {
    private static final Logger log = LoggerFactory.getLogger(CacheImp.class);
    private final JedisPooled jedis;
    private final Class<T> type;
-   private final ObjectMapper mapper = new ObjectMapper();
+   private final ObjectMapper mapper = new ObjectMapper()
+           .registerModule(new JavaTimeModule());
 
    public CacheImp(JedisPooled jedisPooled, Class<T> type) {
       this.jedis = jedisPooled;
@@ -42,16 +44,40 @@ public class CacheImp<T> implements Cache<T> {
    }
 
    @Override
+   public Optional<T> getElement(String key, String element) {
+      List<String> json = jedis.lrange(key, 0, -1);
+      String record = null;
+      boolean found = false;
+      for (String jsonValue : json) {
+         if(jsonValue.contains(element)){
+            found = true;
+            record = jsonValue;
+            break;
+         }
+      }
+      if(!found){
+         return Optional.empty();
+      }
+
+      try{
+         T jsonParsed = mapper.readValue(record, type);
+         return Optional.of(jsonParsed);
+      }catch (JsonProcessingException e){
+         log.error("Can't write json. ", e);
+         return Optional.empty();
+      }
+   }
+
+   @Override
    public void saveCache(String key, List<T> t) {
       try {
          jedis.del(key);
-
          for (T type : t) {
             jedis.rpush(key, mapper.writeValueAsString(type));
          }
          jedis.expire(key, 420);
       } catch (JsonProcessingException e) {
-         log.error("Can't write the json value: ", e);
+         log.error("Can't write the json value. ", e);
       }
    }
 

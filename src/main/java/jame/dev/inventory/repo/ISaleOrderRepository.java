@@ -1,6 +1,6 @@
 package jame.dev.inventory.repo;
 
-import jame.dev.inventory.models.SaleOrderEntity;
+import jame.dev.inventory.models.dao.SaleOrderEntity;
 
 import java.util.List;
 

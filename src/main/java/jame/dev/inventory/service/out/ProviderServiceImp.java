@@ -1,8 +1,8 @@
 package jame.dev.inventory.service.out;
 
 import jame.dev.inventory.dtos.provider.in.ProviderInDto;
-import jame.dev.inventory.models.ProductEntity;
-import jame.dev.inventory.models.ProviderEntity;
+import jame.dev.inventory.models.dao.ProductEntity;
+import jame.dev.inventory.models.dao.ProviderEntity;
 import jame.dev.inventory.repo.IProviderRepository;
 import jame.dev.inventory.service.in.ProviderService;
 import org.springframework.stereotype.Service;

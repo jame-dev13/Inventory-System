@@ -11,7 +11,8 @@ public enum CacheKeys {
    SALE_ORDERS("sale:orders:list"),
    SALES("sales:list"),
    USERS("users:list"),
-   EMPLOYEES("employees:list");
+   EMPLOYEES("employees:list"),
+   SALE_DATE("sale:dates:list");
 
    private final String name;
    CacheKeys(String name){

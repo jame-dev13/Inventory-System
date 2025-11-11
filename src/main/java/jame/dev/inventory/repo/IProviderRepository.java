@@ -1,7 +1,7 @@
 package jame.dev.inventory.repo;
 
-import jame.dev.inventory.models.ProductEntity;
-import jame.dev.inventory.models.ProviderEntity;
+import jame.dev.inventory.models.dao.ProductEntity;
+import jame.dev.inventory.models.dao.ProviderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

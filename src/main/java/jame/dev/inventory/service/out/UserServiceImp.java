@@ -2,8 +2,8 @@ package jame.dev.inventory.service.out;
 
 import jame.dev.inventory.dtos.user.in.UserDtoIn;
 import jame.dev.inventory.exceptions.UserNotFoundException;
-import jame.dev.inventory.models.RoleEntity;
-import jame.dev.inventory.models.UserEntity;
+import jame.dev.inventory.models.dao.RoleEntity;
+import jame.dev.inventory.models.dao.UserEntity;
 import jame.dev.inventory.models.enums.ERole;
 import jame.dev.inventory.repo.IUserRepository;
 import jame.dev.inventory.service.in.UserService;

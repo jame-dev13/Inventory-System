@@ -2,7 +2,7 @@ package jame.dev.inventory.service.out;
 
 import jame.dev.inventory.dtos.employee.in.EmployeeDtoIn;
 import jame.dev.inventory.exceptions.EmployeeNotFoundException;
-import jame.dev.inventory.models.EmployeeEntity;
+import jame.dev.inventory.models.dao.EmployeeEntity;
 import jame.dev.inventory.repo.IEmployeeRepository;
 import jame.dev.inventory.service.in.EmployeeService;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package jame.dev.inventory.service.in;
 
 import jame.dev.inventory.dtos.employee.in.EmployeeDtoIn;
-import jame.dev.inventory.models.EmployeeEntity;
+import jame.dev.inventory.models.dao.EmployeeEntity;
 
 import java.util.List;
 import java.util.Optional;

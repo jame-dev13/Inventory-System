@@ -1,6 +1,6 @@
 package jame.dev.inventory.auth.out;
 
-import jame.dev.inventory.models.UserEntity;
+import jame.dev.inventory.models.dao.UserEntity;
 import jame.dev.inventory.service.in.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

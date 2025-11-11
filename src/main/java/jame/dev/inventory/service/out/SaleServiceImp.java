@@ -1,7 +1,7 @@
 package jame.dev.inventory.service.out;
 
-import jame.dev.inventory.models.SaleEntity;
-import jame.dev.inventory.models.SaleOrderEntity;
+import jame.dev.inventory.models.dao.SaleEntity;
+import jame.dev.inventory.models.dao.SaleOrderEntity;
 import jame.dev.inventory.repo.ISaleRepository;
 import jame.dev.inventory.service.in.SaleService;
 import org.springframework.stereotype.Service;

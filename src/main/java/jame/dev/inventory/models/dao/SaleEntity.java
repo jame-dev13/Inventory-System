@@ -1,4 +1,4 @@
-package jame.dev.inventory.models;
+package jame.dev.inventory.models.dao;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,7 +28,7 @@ public class SaleEntity {
    private List<SaleOrderEntity> saleOrders = new ArrayList<>();
 
    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
-   @JoinColumn(name = "id_employee",
+   @JoinColumn(name = "id_employee", nullable = false,
    foreignKey = @ForeignKey(name = "fk_sale_employee",
    foreignKeyDefinition = "FOREIGN KEY (id_employee) REFERENCES employees(id)"))
    private EmployeeEntity employee;

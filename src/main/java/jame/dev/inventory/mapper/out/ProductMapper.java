@@ -1,16 +1,16 @@
 package jame.dev.inventory.mapper.out;
 
+import jame.dev.inventory.annotations.Mapper;
 import jame.dev.inventory.dtos.product.in.ProductDtoIn;
 import jame.dev.inventory.dtos.product.out.ProductDto;
 import jame.dev.inventory.exceptions.ProviderProductNotFoundException;
 import jame.dev.inventory.mapper.in.InputMapper;
 import jame.dev.inventory.mapper.in.OutputMapper;
-import jame.dev.inventory.models.ProductEntity;
-import jame.dev.inventory.models.ProviderEntity;
+import jame.dev.inventory.models.dao.ProductEntity;
+import jame.dev.inventory.models.dao.ProviderEntity;
 import jame.dev.inventory.service.in.ProviderService;
-import org.springframework.stereotype.Component;
 
-@Component
+@Mapper
 public class ProductMapper implements OutputMapper<ProductDto, ProductEntity>, InputMapper<ProductEntity, ProductDtoIn> {
    private final ProviderService providerService;
 

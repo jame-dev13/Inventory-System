@@ -7,7 +7,7 @@ import jame.dev.inventory.dtos.product.out.ProductDto;
 import jame.dev.inventory.exceptions.ProductNotFoundException;
 import jame.dev.inventory.mapper.in.InputMapper;
 import jame.dev.inventory.mapper.in.OutputMapper;
-import jame.dev.inventory.models.ProductEntity;
+import jame.dev.inventory.models.dao.ProductEntity;
 import jame.dev.inventory.service.in.ProductService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +39,8 @@ public class ProductController {
    @GetMapping
    public ResponseEntity<List<ProductDto>> getProducts() {
       Optional<List<ProductDto>> optionalList = cache.getCache(PRODUCTS.getName());
-      if(optionalList.isPresent()){
+      if (optionalList.isPresent()) {
+         System.out.println("Products get from the cache.");
          return ResponseEntity.ok()
                  .contentType(MediaType.APPLICATION_JSON)
                  .body(optionalList.get());
@@ -49,13 +50,14 @@ public class ProductController {
               .map(mapperOut::toDto)
               .toList();
       cache.saveCache(PRODUCTS.getName(), productsDtoList);
+      System.out.println("Products saved in cache.");
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
               .body(productsDtoList);
    }
 
    @GetMapping("/{id}")
-   public ResponseEntity<ProductDto> getProductById(@PathVariable Long id){
+   public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
       ProductEntity productEntity = productService.getProductById(id)
               .orElseThrow(() -> new ProductNotFoundException("Product not found."));
       return ResponseEntity.ok()

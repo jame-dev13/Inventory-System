@@ -8,7 +8,7 @@ import jame.dev.inventory.exceptions.RefreshTokenException;
 import jame.dev.inventory.exceptions.UserNotFoundException;
 import jame.dev.inventory.factories.CookieTokenFactory;
 import jame.dev.inventory.jwt.in.JwtService;
-import jame.dev.inventory.models.UserEntity;
+import jame.dev.inventory.models.dao.UserEntity;
 import jame.dev.inventory.service.in.TokenService;
 import jame.dev.inventory.service.in.UserService;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -1,8 +1,8 @@
 package jame.dev.inventory.config;
 
-import jame.dev.inventory.models.EmployeeEntity;
-import jame.dev.inventory.models.RoleEntity;
-import jame.dev.inventory.models.UserEntity;
+import jame.dev.inventory.models.dao.EmployeeEntity;
+import jame.dev.inventory.models.dao.RoleEntity;
+import jame.dev.inventory.models.dao.UserEntity;
 import jame.dev.inventory.models.enums.ERole;
 import jame.dev.inventory.models.enums.EShift;
 import jame.dev.inventory.service.in.EmployeeService;

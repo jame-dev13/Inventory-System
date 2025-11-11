@@ -1,18 +1,18 @@
 package jame.dev.inventory.mapper.out;
 
+import jame.dev.inventory.annotations.Mapper;
 import jame.dev.inventory.dtos.user.in.UserDtoIn;
 import jame.dev.inventory.dtos.user.out.UserDto;
 import jame.dev.inventory.mapper.in.InputMapper;
 import jame.dev.inventory.mapper.in.OutputMapper;
-import jame.dev.inventory.models.RoleEntity;
-import jame.dev.inventory.models.UserEntity;
+import jame.dev.inventory.models.dao.RoleEntity;
+import jame.dev.inventory.models.dao.UserEntity;
 import jame.dev.inventory.models.enums.ERole;
-import org.springframework.stereotype.Component;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
+@Mapper
 public class UserMapper implements OutputMapper<UserDto, UserEntity>, InputMapper<UserEntity, UserDtoIn> {
 
 

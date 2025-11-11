@@ -1,7 +1,7 @@
 package jame.dev.inventory.service.out;
 
 import jame.dev.inventory.dtos.customer.in.CustomerDtoIn;
-import jame.dev.inventory.models.CustomerEntity;
+import jame.dev.inventory.models.dao.CustomerEntity;
 import jame.dev.inventory.repo.ICustomerRepository;
 import jame.dev.inventory.service.in.CustomerService;
 import org.springframework.stereotype.Service;

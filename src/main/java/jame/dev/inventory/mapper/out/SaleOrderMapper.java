@@ -1,5 +1,6 @@
 package jame.dev.inventory.mapper.out;
 
+import jame.dev.inventory.annotations.Mapper;
 import jame.dev.inventory.dtos.customer.out.CustomerDto;
 import jame.dev.inventory.dtos.product.out.ProductDto;
 import jame.dev.inventory.dtos.sale.in.SaleOrderInDto;
@@ -7,16 +8,15 @@ import jame.dev.inventory.dtos.sale.out.SaleOrderDto;
 import jame.dev.inventory.exceptions.CustomerNotFoundException;
 import jame.dev.inventory.mapper.in.InputMapper;
 import jame.dev.inventory.mapper.in.OutputMapper;
-import jame.dev.inventory.models.CustomerEntity;
-import jame.dev.inventory.models.ProductEntity;
-import jame.dev.inventory.models.SaleOrderEntity;
+import jame.dev.inventory.models.dao.CustomerEntity;
+import jame.dev.inventory.models.dao.ProductEntity;
+import jame.dev.inventory.models.dao.SaleOrderEntity;
 import jame.dev.inventory.service.in.CustomerService;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+@Mapper
 public class SaleOrderMapper implements
         OutputMapper<SaleOrderDto, SaleOrderEntity>,
         InputMapper<SaleOrderEntity, SaleOrderInDto> {

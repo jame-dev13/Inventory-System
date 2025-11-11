@@ -8,7 +8,7 @@ import jame.dev.inventory.dtos.customer.out.CustomerDto;
 import jame.dev.inventory.exceptions.CustomerNotFoundException;
 import jame.dev.inventory.mapper.in.InputMapper;
 import jame.dev.inventory.mapper.in.OutputMapper;
-import jame.dev.inventory.models.CustomerEntity;
+import jame.dev.inventory.models.dao.CustomerEntity;
 import jame.dev.inventory.service.in.CustomerService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

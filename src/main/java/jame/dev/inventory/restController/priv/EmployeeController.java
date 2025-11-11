@@ -6,7 +6,7 @@ import jame.dev.inventory.dtos.employee.out.EmployeeDto;
 import jame.dev.inventory.exceptions.EmployeeNotFoundException;
 import jame.dev.inventory.mapper.in.InputMapper;
 import jame.dev.inventory.mapper.in.OutputMapper;
-import jame.dev.inventory.models.EmployeeEntity;
+import jame.dev.inventory.models.dao.EmployeeEntity;
 import jame.dev.inventory.service.in.EmployeeService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

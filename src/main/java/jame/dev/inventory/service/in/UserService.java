@@ -1,7 +1,7 @@
 package jame.dev.inventory.service.in;
 
 import jame.dev.inventory.dtos.user.in.UserDtoIn;
-import jame.dev.inventory.models.UserEntity;
+import jame.dev.inventory.models.dao.UserEntity;
 
 import java.util.List;
 import java.util.Optional;

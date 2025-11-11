@@ -1,7 +1,7 @@
 package jame.dev.inventory.service.in;
 
 import jame.dev.inventory.dtos.customer.in.CustomerDtoIn;
-import jame.dev.inventory.models.CustomerEntity;
+import jame.dev.inventory.models.dao.CustomerEntity;
 
 import java.util.List;
 import java.util.Optional;

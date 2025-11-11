@@ -12,7 +12,7 @@
   <artifactId>inventory</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>inventory</name>
-  <description>Inventory System that manages, sales, productos, customers, purchases, etc</description>
+  <description>Inventory System (POS) that manages, sales, products, customers, employees, etc</description>
   <url/>
   <licenses>
     <license/>

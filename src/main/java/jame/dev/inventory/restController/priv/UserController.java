@@ -6,7 +6,7 @@ import jame.dev.inventory.dtos.user.out.UserDto;
 import jame.dev.inventory.exceptions.UserNotFoundException;
 import jame.dev.inventory.mapper.in.InputMapper;
 import jame.dev.inventory.mapper.in.OutputMapper;
-import jame.dev.inventory.models.UserEntity;
+import jame.dev.inventory.models.dao.UserEntity;
 import jame.dev.inventory.service.in.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

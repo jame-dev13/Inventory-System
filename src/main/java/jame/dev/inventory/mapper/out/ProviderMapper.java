@@ -1,13 +1,13 @@
 package jame.dev.inventory.mapper.out;
 
+import jame.dev.inventory.annotations.Mapper;
 import jame.dev.inventory.dtos.provider.in.ProviderInDto;
 import jame.dev.inventory.dtos.provider.out.ProviderDto;
 import jame.dev.inventory.mapper.in.InputMapper;
 import jame.dev.inventory.mapper.in.OutputMapper;
-import jame.dev.inventory.models.ProviderEntity;
-import org.springframework.stereotype.Component;
+import jame.dev.inventory.models.dao.ProviderEntity;
 
-@Component
+@Mapper
 public class ProviderMapper implements OutputMapper<ProviderDto, ProviderEntity>, InputMapper<ProviderEntity, ProviderInDto> {
 
    @Override

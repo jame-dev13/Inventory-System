@@ -1,4 +1,4 @@
-package jame.dev.inventory.models;
+package jame.dev.inventory.models.dao;
 
 
 import jakarta.annotation.Nonnull;

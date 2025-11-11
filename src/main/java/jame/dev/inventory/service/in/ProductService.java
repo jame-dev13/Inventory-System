@@ -1,7 +1,7 @@
 package jame.dev.inventory.service.in;
 
 import jame.dev.inventory.dtos.product.in.ProductDtoIn;
-import jame.dev.inventory.models.ProductEntity;
+import jame.dev.inventory.models.dao.ProductEntity;
 
 import java.util.List;
 import java.util.Optional;
