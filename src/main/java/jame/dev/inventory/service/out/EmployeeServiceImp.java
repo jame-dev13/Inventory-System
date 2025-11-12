@@ -3,7 +3,7 @@ package jame.dev.inventory.service.out;
 import jame.dev.inventory.dtos.employee.in.EmployeeDtoIn;
 import jame.dev.inventory.exceptions.EmployeeNotFoundException;
 import jame.dev.inventory.models.dao.EmployeeEntity;
-import jame.dev.inventory.repo.IEmployeeRepository;
+import jame.dev.inventory.repo.EmployeeRepository;
 import jame.dev.inventory.service.in.EmployeeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,8 +14,8 @@ import java.util.Optional;
 @Service
 public class EmployeeServiceImp implements EmployeeService {
 
-   private final IEmployeeRepository repo;
-   public EmployeeServiceImp(IEmployeeRepository repo) {
+   private final EmployeeRepository repo;
+   public EmployeeServiceImp(EmployeeRepository repo) {
       this.repo = repo;
    }
 

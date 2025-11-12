@@ -3,8 +3,8 @@ package jame.dev.inventory.config;
 import jame.dev.inventory.models.dao.EmployeeEntity;
 import jame.dev.inventory.models.dao.RoleEntity;
 import jame.dev.inventory.models.dao.UserEntity;
-import jame.dev.inventory.models.enums.ERole;
-import jame.dev.inventory.models.enums.EShift;
+import jame.dev.inventory.models.enums.Role;
+import jame.dev.inventory.models.enums.Shift;
 import jame.dev.inventory.service.in.EmployeeService;
 import jame.dev.inventory.service.in.UserService;
 import org.slf4j.Logger;
@@ -36,7 +36,7 @@ public class InitConfig {
                  .lastName("adm")
                  .email(emailAdmin)
                  .password(encoder.encode(pwdAdmin))
-                 .roles(Set.of(new RoleEntity(null, ERole.ADMIN), new RoleEntity(null, ERole.EMPLOYEE)))
+                 .roles(Set.of(new RoleEntity(null, Role.ADMIN), new RoleEntity(null, Role.EMPLOYEE)))
                  .active(true)
                  .build();
          UserEntity userPresent = service.getUserByEmail(userEntity.getEmail())
@@ -49,7 +49,7 @@ public class InitConfig {
          EmployeeEntity employee = EmployeeEntity.builder()
                  .user(userEntity)
                  .salary(BigDecimal.valueOf(30_000.00))
-                 .shift(EShift.MORNING)
+                 .shift(Shift.MORNING)
                  .active(true)
                  .build();
          employeeService.save(employee);

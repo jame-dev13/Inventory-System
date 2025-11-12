@@ -2,5 +2,5 @@ package jame.dev.inventory.repo;
 
 import jame.dev.inventory.models.dao.CustomerEntity;
 
-public interface ICustomerRepository extends CustomJpaRepository<CustomerEntity, Long>{
+public interface CustomerRepository extends CustomJpaRepository<CustomerEntity, Long>{
 }

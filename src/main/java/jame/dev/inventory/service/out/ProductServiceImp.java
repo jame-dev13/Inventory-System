@@ -4,8 +4,8 @@ import jame.dev.inventory.dtos.product.in.ProductDtoIn;
 import jame.dev.inventory.exceptions.ProviderProductNotFoundException;
 import jame.dev.inventory.models.dao.ProductEntity;
 import jame.dev.inventory.models.dao.ProviderEntity;
-import jame.dev.inventory.repo.IProductRepository;
-import jame.dev.inventory.repo.IProviderRepository;
+import jame.dev.inventory.repo.ProductRepository;
+import jame.dev.inventory.repo.ProviderRepository;
 import jame.dev.inventory.service.in.ProductService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +15,10 @@ import java.util.Optional;
 
 @Service
 public class ProductServiceImp implements ProductService {
-   private final IProductRepository repo;
-   private final IProviderRepository repoProvider;
+   private final ProductRepository repo;
+   private final ProviderRepository repoProvider;
 
-   public ProductServiceImp(IProductRepository repo, IProviderRepository repoProvider) {
+   public ProductServiceImp(ProductRepository repo, ProviderRepository repoProvider) {
       this.repo = repo;
       this.repoProvider = repoProvider;
    }

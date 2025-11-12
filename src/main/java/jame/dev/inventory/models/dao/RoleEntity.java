@@ -1,7 +1,7 @@
 package jame.dev.inventory.models.dao;
 
 import jakarta.persistence.*;
-import jame.dev.inventory.models.enums.ERole;
+import jame.dev.inventory.models.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,5 +21,5 @@ public class RoleEntity {
 
    @Column(name = "role", length = 10, nullable = false)
    @Enumerated(EnumType.STRING)
-   private ERole role;
+   private Role role;
 }

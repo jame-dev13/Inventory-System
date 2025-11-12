@@ -2,7 +2,7 @@ package jame.dev.inventory.service.out;
 
 import jame.dev.inventory.dtos.customer.in.CustomerDtoIn;
 import jame.dev.inventory.models.dao.CustomerEntity;
-import jame.dev.inventory.repo.ICustomerRepository;
+import jame.dev.inventory.repo.CustomerRepository;
 import jame.dev.inventory.service.in.CustomerService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,8 +12,8 @@ import java.util.Optional;
 @Service
 public class CustomerServiceImp implements CustomerService {
 
-   private final ICustomerRepository repo;
-   public CustomerServiceImp(ICustomerRepository repo) {
+   private final CustomerRepository repo;
+   public CustomerServiceImp(CustomerRepository repo) {
       this.repo = repo;
    }
 

@@ -3,18 +3,19 @@ package jame.dev.inventory.service.out;
 import jame.dev.inventory.exceptions.TokenAlreadyBlacklisted;
 import jame.dev.inventory.jwt.in.JwtService;
 import jame.dev.inventory.service.in.TokenService;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.JedisPooled;
 
 @Service
-@AllArgsConstructor
 public class TokenServiceImp implements TokenService {
 
-   @Autowired
    private final JedisPooled jedis;
    private final JwtService jwtService;
+
+   public TokenServiceImp(JedisPooled jedis, JwtService jwtService) {
+      this.jedis = jedis;
+      this.jwtService = jwtService;
+   }
 
    @Override
    public void save(String token, long ttl) {

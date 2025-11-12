@@ -7,7 +7,7 @@ import jame.dev.inventory.mapper.in.InputMapper;
 import jame.dev.inventory.mapper.in.OutputMapper;
 import jame.dev.inventory.models.dao.RoleEntity;
 import jame.dev.inventory.models.dao.UserEntity;
-import jame.dev.inventory.models.enums.ERole;
+import jame.dev.inventory.models.enums.Role;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -53,13 +53,13 @@ public class UserMapper implements OutputMapper<UserDto, UserEntity>, InputMappe
               .build();
    }
 
-   private Set<RoleEntity> mapRoles(Set<ERole> roles){
+   private Set<RoleEntity> mapRoles(Set<Role> roles){
       return roles.stream()
               .map(r -> RoleEntity.builder().role(r).build())
               .collect(Collectors.toSet());
    }
 
-   private Set<ERole> mapRolesInverse(Set<RoleEntity> roles){
+   private Set<Role> mapRolesInverse(Set<RoleEntity> roles){
       return roles.stream()
               .map(RoleEntity::getRole)
               .collect(Collectors.toSet());

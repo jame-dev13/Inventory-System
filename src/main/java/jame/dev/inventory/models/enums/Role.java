@@ -1,5 +1,5 @@
 package jame.dev.inventory.models.enums;
 
-public enum ERole {
+public enum Role {
    ADMIN, EMPLOYEE
 }

@@ -1,15 +1,15 @@
 package jame.dev.inventory.factories;
 
 import jakarta.servlet.http.Cookie;
-import jame.dev.inventory.models.enums.ECookieName;
+import jame.dev.inventory.models.enums.CookieName;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CookieTokenFactory {
 
-   private static final String COOKIE_ACCESS_NAME = ECookieName.JWT_ACCESS.getName();
-   private static final String COOKIE_REFRESH_NAME= ECookieName.JWT_REFRESH.getName();
+   private static final String COOKIE_ACCESS_NAME = CookieName.JWT_ACCESS.getName();
+   private static final String COOKIE_REFRESH_NAME = CookieName.JWT_REFRESH.getName();
 
    @Value("${jwt.secret.expiration}")
    private long expirationAccess;

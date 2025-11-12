@@ -1,7 +1,7 @@
 package jame.dev.inventory.service.out;
 
 import jame.dev.inventory.models.dao.SaleDateEntity;
-import jame.dev.inventory.repo.ISaleDateRepository;
+import jame.dev.inventory.repo.SaleDateRepository;
 import jame.dev.inventory.service.in.SaleDateService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +13,9 @@ import java.util.Optional;
 
 @Service
 public class SaleDateServiceImp implements SaleDateService {
-   private final ISaleDateRepository repo;
+   private final SaleDateRepository repo;
 
-   public SaleDateServiceImp(ISaleDateRepository repo) {
+   public SaleDateServiceImp(SaleDateRepository repo) {
       this.repo = repo;
    }
 

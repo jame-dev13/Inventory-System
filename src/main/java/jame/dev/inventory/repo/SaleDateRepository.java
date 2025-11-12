@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface ISaleDateRepository extends JpaRepository<SaleDateEntity, LocalDate> {
+public interface SaleDateRepository extends JpaRepository<SaleDateEntity, LocalDate> {
 
    @Query(value = "SELECT e FROM SaleDateEntity e ORDER BY e.saleDate ASC")
    List<SaleDateEntity> findAllAsc();

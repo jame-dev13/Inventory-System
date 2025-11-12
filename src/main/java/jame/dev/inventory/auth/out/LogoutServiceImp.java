@@ -3,17 +3,20 @@ package jame.dev.inventory.auth.out;
 import jame.dev.inventory.auth.in.LogoutService;
 import jame.dev.inventory.jwt.in.JwtService;
 import jame.dev.inventory.service.in.TokenService;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 public class LogoutServiceImp implements LogoutService {
    private final TokenService tokenService;
    private final JwtService jwtService;
+
+   public LogoutServiceImp(TokenService tokenService, JwtService jwtService) {
+      this.tokenService = tokenService;
+      this.jwtService = jwtService;
+   }
 
    @Override
    public void logout(String token) {

@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ISaleRepository extends CustomJpaRepository<SaleEntity, Long> {
+public interface SaleRepository extends CustomJpaRepository<SaleEntity, Long> {
 
    @Query(value = "SELECT s FROM SaleOrderEntity s JOIN s.saleOrder sa WHERE sa.id = :orderId", nativeQuery = true)
    List<SaleOrderEntity> getSaleOrders(@Param("orderId") Long orderId);

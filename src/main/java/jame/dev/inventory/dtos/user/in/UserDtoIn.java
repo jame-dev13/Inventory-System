@@ -2,7 +2,7 @@ package jame.dev.inventory.dtos.user.in;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import jame.dev.inventory.models.enums.ERole;
+import jame.dev.inventory.models.enums.Role;
 import lombok.Builder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -15,7 +15,7 @@ public record UserDtoIn(
         @JsonProperty("lastName") String lastName,
         @JsonProperty("email") String email,
         @JsonProperty("password") String password,
-        @JsonProperty("role") Set<ERole> role
+        @JsonProperty("role") Set<Role> role
 ) {
    public UserDtoIn {
       password = new BCryptPasswordEncoder().encode(password);

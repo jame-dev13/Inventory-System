@@ -4,7 +4,7 @@ import jame.dev.inventory.models.dao.SaleOrderEntity;
 
 import java.util.List;
 
-public interface ISaleOrderRepository extends CustomJpaRepository<SaleOrderEntity, Long> {
+public interface SaleOrderRepository extends CustomJpaRepository<SaleOrderEntity, Long> {
 
    List<SaleOrderEntity> findAllByIdIn(List<Long> id);
 }

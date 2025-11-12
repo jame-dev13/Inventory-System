@@ -2,7 +2,7 @@ package jame.dev.inventory.dtos.user.out;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jame.dev.inventory.models.enums.ERole;
+import jame.dev.inventory.models.enums.Role;
 import lombok.Builder;
 
 import java.util.Set;
@@ -15,6 +15,6 @@ public record UserDto(
         @JsonProperty("lastName") String lastName,
         @JsonProperty("email") String email,
         @JsonProperty("password") String password,
-        @JsonProperty("role") Set<ERole> role
+        @JsonProperty("role") Set<Role> role
 ) {
 }

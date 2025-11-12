@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jame.dev.inventory.exceptions.ClaimsNullException;
 import jame.dev.inventory.jwt.in.JwtService;
-import jame.dev.inventory.models.enums.ECookieName;
+import jame.dev.inventory.models.enums.CookieName;
 import jame.dev.inventory.service.in.TokenService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -121,9 +121,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
    private Map<String, String> getTokenFromCookie(final Cookie[] cookies){
       Map<String, String> values = new HashMap<>();
       for (Cookie cookie : cookies) {
-         if(cookie.getName().equals(ECookieName.JWT_ACCESS.getName())){
+         if(cookie.getName().equals(CookieName.JWT_ACCESS.getName())){
             values.put(NameValueJwt.ACCESS.getName(), cookie.getValue());
-         } else if (cookie.getName().equals(ECookieName.JWT_REFRESH.getName())) {
+         } else if (cookie.getName().equals(CookieName.JWT_REFRESH.getName())) {
             values.put(NameValueJwt.REFRESH.getName(), cookie.getValue());
          }
       }

@@ -4,7 +4,7 @@ package jame.dev.inventory.models.dao;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jame.dev.inventory.models.enums.EShift;
+import jame.dev.inventory.models.enums.Shift;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -37,7 +37,7 @@ public class EmployeeEntity {
    @NotBlank
    @Nonnull
    @Enumerated(EnumType.STRING)
-   private EShift shift;
+   private Shift shift;
 
    @Column(name = "active", nullable = false)
    @Setter(AccessLevel.NONE)

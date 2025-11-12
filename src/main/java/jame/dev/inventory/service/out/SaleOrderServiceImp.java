@@ -7,7 +7,7 @@ import jame.dev.inventory.mapper.in.OutputMapper;
 import jame.dev.inventory.models.dao.CustomerEntity;
 import jame.dev.inventory.models.dao.ProductEntity;
 import jame.dev.inventory.models.dao.SaleOrderEntity;
-import jame.dev.inventory.repo.ISaleOrderRepository;
+import jame.dev.inventory.repo.SaleOrderRepository;
 import jame.dev.inventory.service.in.CustomerService;
 import jame.dev.inventory.service.in.SaleOrderService;
 import org.springframework.stereotype.Service;
@@ -20,11 +20,11 @@ import java.util.stream.Collectors;
 @Service
 public class SaleOrderServiceImp implements SaleOrderService {
 
-   private final ISaleOrderRepository repo;
+   private final SaleOrderRepository repo;
    private final CustomerService customerService;
    private final OutputMapper<ProductDto, ProductEntity> productEntityMapper;
 
-   public SaleOrderServiceImp(ISaleOrderRepository repo, CustomerService customerService, OutputMapper<ProductDto, ProductEntity> productEntityMapper) {
+   public SaleOrderServiceImp(SaleOrderRepository repo, CustomerService customerService, OutputMapper<ProductDto, ProductEntity> productEntityMapper) {
       this.repo = repo;
       this.customerService = customerService;
       this.productEntityMapper = productEntityMapper;

@@ -4,8 +4,8 @@ import jame.dev.inventory.dtos.user.in.UserDtoIn;
 import jame.dev.inventory.exceptions.UserNotFoundException;
 import jame.dev.inventory.models.dao.RoleEntity;
 import jame.dev.inventory.models.dao.UserEntity;
-import jame.dev.inventory.models.enums.ERole;
-import jame.dev.inventory.repo.IUserRepository;
+import jame.dev.inventory.models.enums.Role;
+import jame.dev.inventory.repo.UserRepository;
 import jame.dev.inventory.service.in.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,9 +18,9 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImp implements UserService {
 
-   private final IUserRepository repo;
+   private final UserRepository repo;
 
-   public UserServiceImp(IUserRepository repo) {
+   public UserServiceImp(UserRepository repo) {
       this.repo = repo;
    }
 
@@ -64,7 +64,7 @@ public class UserServiceImp implements UserService {
       repo.softDeleteById(id);
    }
 
-   private Set<RoleEntity> mapRoles(Set<ERole> roles){
+   private Set<RoleEntity> mapRoles(Set<Role> roles){
       return roles.stream()
               .map(r -> RoleEntity.builder().role(r).build())
               .collect(Collectors.toSet());

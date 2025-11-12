@@ -3,7 +3,7 @@ package jame.dev.inventory.service.out;
 import jame.dev.inventory.dtos.provider.in.ProviderInDto;
 import jame.dev.inventory.models.dao.ProductEntity;
 import jame.dev.inventory.models.dao.ProviderEntity;
-import jame.dev.inventory.repo.IProviderRepository;
+import jame.dev.inventory.repo.ProviderRepository;
 import jame.dev.inventory.service.in.ProviderService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +14,9 @@ import java.util.Optional;
 @Service
 public class ProviderServiceImp implements ProviderService {
 
-   private final IProviderRepository repo;
+   private final ProviderRepository repo;
 
-   public ProviderServiceImp(IProviderRepository repo) {
+   public ProviderServiceImp(ProviderRepository repo) {
       this.repo = repo;
    }
 

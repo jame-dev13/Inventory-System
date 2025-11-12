@@ -2,7 +2,7 @@ package jame.dev.inventory.service.out;
 
 import jame.dev.inventory.models.dao.SaleEntity;
 import jame.dev.inventory.models.dao.SaleOrderEntity;
-import jame.dev.inventory.repo.ISaleRepository;
+import jame.dev.inventory.repo.SaleRepository;
 import jame.dev.inventory.service.in.SaleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +14,9 @@ import java.util.Optional;
 @Service
 public class SaleServiceImp implements SaleService {
 
-   private final ISaleRepository repo;
+   private final SaleRepository repo;
 
-   public SaleServiceImp(ISaleRepository repo) {
+   public SaleServiceImp(SaleRepository repo) {
       this.repo = repo;
    }
 
