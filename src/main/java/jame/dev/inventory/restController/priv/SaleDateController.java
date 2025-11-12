@@ -3,6 +3,8 @@ package jame.dev.inventory.restController.priv;
 import jakarta.annotation.Nonnull;
 import jame.dev.inventory.cache.in.Cache;
 import jame.dev.inventory.dtos.date.SaleDateDto;
+import jame.dev.inventory.dtos.date.SellerNameDto;
+import jame.dev.inventory.dtos.date.TotalAmountSellDto;
 import jame.dev.inventory.mapper.in.OutputMapper;
 import jame.dev.inventory.models.dao.SaleDateEntity;
 import jame.dev.inventory.service.in.SaleDateService;
@@ -14,10 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static jame.dev.inventory.cache.CacheKeys.SALE_DATE;
@@ -56,17 +56,17 @@ public class SaleDateController {
    }
 
    @GetMapping("{date}/seller-names")
-   public ResponseEntity<Map<String, List<String>>> getSellerNames(@PathVariable @Nonnull final LocalDate date){
+   public ResponseEntity<SellerNameDto> getSellerNames(@PathVariable @Nonnull final LocalDate date){
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
-              .body(Map.of("sellers", saleDateService.getEmployeesWhoSellByDate(date)));
+              .body(new SellerNameDto(saleDateService.getEmployeesWhoSellByDate(date)));
    }
 
    @GetMapping("{date}/total")
-   public ResponseEntity<Map<String, BigDecimal>> getTotalAmountSellForDate(@PathVariable @Nonnull final LocalDate date){
+   public ResponseEntity<TotalAmountSellDto> getTotalAmountSellForDate(@PathVariable @Nonnull final LocalDate date){
       return ResponseEntity.ok()
               .contentType(MediaType.APPLICATION_JSON)
-              .body(Map.of("total", saleDateService.getTotalAmountSellByDate(date)));
+              .body(new TotalAmountSellDto(saleDateService.getTotalAmountSellByDate(date)));
    }
 
 }
